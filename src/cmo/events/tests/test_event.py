@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
+from cmo.events.interfaces import IEvent
+from cmo.events.testing import CMO_EVENTS_INTEGRATION_TESTING  # noqa
 from plone import api
 from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
 from plone.dexterity.interfaces import IDexterityFTI
-from cmo.events.interfaces import IEvent
-from cmo.events.testing import CMO_EVENTS_INTEGRATION_TESTING  # noqa
 from zope.component import createObject
 from zope.component import queryUtility
 
