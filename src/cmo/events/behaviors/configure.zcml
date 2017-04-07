@@ -1,0 +1,31 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
+    i18n_domain="plone.app.dexterity">
+
+    <include package="plone.behavior" file="meta.zcml"/>
+
+    <!-- Behaviors -->
+    <plone:behavior
+        title="Person behavior"
+        description="Adds person fields."
+        provides=".person.IPerson"
+        for="plone.dexterity.interfaces.IDexterityContent"
+        />
+
+    <plone:behavior
+        title="Membership behavior"
+        description="Adds membership fields."
+        provides=".membership.IMembership"
+        for="plone.dexterity.interfaces.IDexterityContent"
+        />
+
+    <plone:behavior
+        title="Acommodation behavior"
+        description="Adds acommodation fields."
+        provides=".acommodation.IAcommodation"
+        for="plone.dexterity.interfaces.IDexterityContent"
+        />
+
+</configure>
