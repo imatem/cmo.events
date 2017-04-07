@@ -1,0 +1,5 @@
+====================
+cmo.events
+====================
+
+User documentation
