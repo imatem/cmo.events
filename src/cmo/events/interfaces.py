@@ -22,3 +22,19 @@ class IEvent(Interface):
         title=_(u'Description'),
         required=False,
     )
+
+
+class IParticipant(Interface):
+    """An application form for renewal scholarship.
+    """
+    # form.mode(title='hidden')
+    title = schema.TextLine(
+        title=_(u'Title'),
+        required=False,
+        # default=u'solicitud-20171'
+    )
+
+    workshop = schema.TextLine(
+        title=_(u'label_cmo_workshop', u'Workshop'),
+        required=False,
+    )

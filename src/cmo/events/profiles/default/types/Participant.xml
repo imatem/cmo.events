@@ -2,7 +2,7 @@
 <object
     i18n:domain="cmo.events"
     meta_type="Dexterity FTI"
-    name="cmo.events.participant"
+    name="Participant"
     xmlns:i18n="http://xml.zope.org/namespaces/i18n">
 
   <!-- Basic properties -->
@@ -14,7 +14,7 @@
       name="description"></property>
 
   <property name="allow_discussion">False</property>
-  <property name="factory">cmo.events.participant</property>
+  <property name="factory">Participant</property>
   <property name="icon_expr"></property>
   <property name="link_target"></property>
 
@@ -28,22 +28,20 @@
   <!-- Schema, class and security -->
   <property name="add_permission">cmf.AddPortalContent</property>
   <property name="klass">plone.dexterity.content.Item</property>
-  <!-- <property name="klass">plone.dexterity.content.Container</property> -->
   <property name="model_file"></property>
   <property name="model_source"></property>
-  <property name="schema">cmo.events.participant.IParticipant</property>
-  <property name="schema_policy">dexterity</property>
+  <property name="schema">cmo.events.interfaces.IParticipant</property>
 
   <!-- Enabled behaviors -->
   <property name="behaviors">
     <!-- <element value="plone.app.content.interfaces.INameFromTitle" /> -->
-    <!-- <element value="cmo.events.behaviors.person.IPerson" />
+    <element value="cmo.events.behaviors.person.IPerson" />
     <element value="cmo.events.behaviors.membership.IMembership" />
-    <element value="cmo.events.behaviors.acommodation.IAcommodation" /> -->
+    <element value="cmo.events.behaviors.acommodation.IAcommodation" />
   </property>
 
   <!-- View information -->
-  <!-- <property name="add_view_expr">string:${folder_url}/++add++cmo.events.participant</property> -->
+  <property name="add_view_expr">string:${folder_url}/++add++Participant</property>
   <property name="immediate_view">view</property>
   <property name="default_view">view</property>
   <property name="default_view_fallback">False</property>
