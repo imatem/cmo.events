@@ -12,6 +12,8 @@
         description="Adds person fields."
         provides=".person.IPerson"
         for="plone.dexterity.interfaces.IDexterityContent"
+        marker=".person.IPerson"
+        factory=".person.Person"
         />
 
     <plone:behavior
@@ -19,6 +21,8 @@
         description="Adds membership fields."
         provides=".membership.IMembership"
         for="plone.dexterity.interfaces.IDexterityContent"
+        marker=".membership.IMembership"
+        factory=".membership.Membership"
         />
 
     <plone:behavior
@@ -26,6 +30,8 @@
         description="Adds acommodation fields."
         provides=".acommodation.IAcommodation"
         for="plone.dexterity.interfaces.IDexterityContent"
+        marker=".acommodation.IAcommodation"
+        factory=".acommodation.Acommodation"
         />
 
 </configure>
