@@ -2,11 +2,15 @@
 from cmo.events import _
 from plone.autoform.interfaces import IFormFieldProvider
 # from plone.directives import form
-from plone.autoform import directives
+# from plone.autoform import directives
 from plone.supermodel import model
 from zope import schema
-from zope.interface import alsoProvides
-from plone.supermodel.directives import fieldset
+# from zope.interface import alsoProvides
+# from plone.supermodel.directives import fieldset
+
+from zope.component import adapter
+from zope.interface import implementer
+from plone.dexterity.interfaces import IDexterityContent
 
 
 from zope.interface import provider
@@ -15,6 +19,25 @@ from zope.interface import provider
 class IMembership(model.Schema):
     """Behavior Information about the person
     """
+
+    model.fieldset(
+        'membershipInformation',
+        label=_(
+            u'label_cmo_membershipInformation',
+            u'Membership'
+        ),
+        fields=[
+            'arrival',
+            'departure',
+            'attendance',
+            'role',
+            'replied',
+            'hasguest',
+            'specialInfo',
+            'offsite',
+            'eventNotes',
+        ]
+    )
 
     arrival = schema.TextLine(
         title=_(
@@ -85,23 +108,12 @@ class IMembership(model.Schema):
         required=False,
     )
 
-    fieldset(
-        'membershipInformation',
-        label=_(
-            u'label_cmo_membershipInformation',
-            u'Membership'
-        ),
-        fields=[
-            arrival,
-            departure,
-            attendance,
-            role,
-            replied,
-            hasguest,
-            specialInfo,
-            offsite,
-            eventNotes,
-        ]
-    )
+@implementer(IMembership)
+@adapter(IDexterityContent)
+class Membership(object):
+
+    def __init__(self, context):
+        self.context = context
+    
 
 # alsoProvides(IMembership, IFormFieldProvider)

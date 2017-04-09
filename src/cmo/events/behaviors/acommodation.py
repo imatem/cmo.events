@@ -9,10 +9,29 @@ from zope import schema
 from zope.interface import alsoProvides
 from zope.interface import provider
 
+from zope.component import adapter
+from zope.interface import implementer
+from plone.dexterity.interfaces import IDexterityContent
+
+
 @provider(IFormFieldProvider)
 class IAcommodation(model.Schema):
     """Behavior Information about the person
     """
+
+    model.fieldset(
+        'acommodationInformation',
+        label=_(
+            u'label_cmo_acommodationInformation',
+            u'Acommodation'
+        ),
+        fields=[
+            'hotel',
+            'visa',
+            'externalHotel',
+            'nameGuest',
+        ]
+    )
 
     hotel = schema.TextLine(
         title=_(
@@ -44,18 +63,13 @@ class IAcommodation(model.Schema):
         required=False,
     )
 
-    fieldset(
-        'acommodationInformation',
-        label=_(
-            u'label_cmo_acommodationInformation',
-            u'Acommodation'
-        ),
-        fields=[
-            hotel,
-            visa,
-            externalHotel,
-            nameGuest,
-        ]
-    )
+@implementer(IAcommodation)
+@adapter(IDexterityContent)
+class Acommodation(object):
+
+    def __init__(self, context):
+        self.context = context
+    
+    
 
 # alsoProvides(IAcommodation, IFormFieldProvider)

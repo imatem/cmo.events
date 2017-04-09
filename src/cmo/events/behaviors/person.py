@@ -1,20 +1,55 @@
 # -*- coding: utf-8 -*-
 from cmo.events import _
-from plone.autoform.interfaces import IFormFieldProvider
-# from plone.directives import form
-from plone.autoform import directives
+# from plone.autoform.interfaces import IFormFieldProvider
+# # from plone.directives import form
+# # from plone.autoform import directives
+# from plone.supermodel import model
+# from zope import schema
+# # from zope.interface import alsoProvides
+# from plone.supermodel.directives import fieldset
 from plone.supermodel import model
+# from plone.dexterity.interfaces import IDexterityContent
+# from zope.interface import provider
+
+# from plone.app.contenttypes import _
+from plone.autoform.interfaces import IFormFieldProvider
+from plone.dexterity.interfaces import IDexterityContent
+# from plone.namedfile import field as namedfile
+# from plone.supermodel import model
 from zope import schema
-from zope.interface import alsoProvides
-from plone.supermodel.directives import fieldset
-
-
+from zope.component import adapter
+from zope.interface import implementer
 from zope.interface import provider
+
 
 @provider(IFormFieldProvider)
 class IPerson(model.Schema):
     """Behavior Information about the person
     """
+
+    model.fieldset(
+        'personInformation',
+        label=_(
+            u'label_cmo_personinformation',
+            u'Person'
+        ),
+        # description=_(
+        #     u'',
+        #     u''
+        # ),
+        fields=[
+            'firstname',
+            'lastname',
+            'email',
+            'country',
+            'affiliation',
+            'grade',
+            'home',
+            'phone',
+            'year',
+            'status',
+        ]
+    )
 
     firstname = schema.TextLine(
         title=_(
@@ -93,28 +128,9 @@ class IPerson(model.Schema):
         required=False,
     )
 
-    fieldset(
-        'personInformation',
-        label=_(
-            u'label_cmo_personinformation',
-            u'Person'
-        ),
-        # description=_(
-        #     u'',
-        #     u''
-        # ),
-        fields=[
-            firstname,
-            lastname,
-            email,
-            country,
-            affiliation,
-            grade,
-            home,
-            phone,
-            year,
-            status,
-        ]
-    )
+@implementer(IPerson)
+@adapter(IDexterityContent)
+class Person(object):
 
-# alsoProvides(IPerson, IFormFieldProvider)
+    def __init__(self, context):
+        self.context = context
