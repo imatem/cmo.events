@@ -18,4 +18,13 @@
       directory="static"
       />
 
+  <!-- views for the contents -->
+  <browser:page
+        name="view"
+        for="cmo.events.interfaces.IWorkshop"
+        class=".workshop.WorkshopView"
+        permission="zope2.View"
+        template="templates/workshop.pt"
+        />
+
 </configure>
