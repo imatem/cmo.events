@@ -38,3 +38,29 @@ class IParticipant(Interface):
         title=_(u'label_cmo_workshop', u'Workshop'),
         required=False,
     )
+
+
+class IWorkshop(Interface):
+    """Workshop
+    """
+    # form.mode(title='hidden')
+    title = schema.TextLine(
+        title=_(u'Title'),
+        required=False,
+    )
+
+    workshopid = schema.TextLine(
+        title=_(u'label_cmo_workshopid', u'Workshop ID'),
+        required=False,
+    )
+
+    workshopstart = schema.TextLine(
+        title=_(u'label_cmo_workshopstart', u'Workshop Start Date'),
+        required=False,
+    )
+
+    workshopend = schema.TextLine(
+        title=_(u'label_cmo_workshopend', u'Workshop End Date'),
+        required=False,
+    )
+
