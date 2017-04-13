@@ -6,6 +6,9 @@ from zope import schema
 from zope.interface import Interface
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
 
+from zope.interface import invariant
+from zope.interface import Invalid
+
 
 class ICmoEventsLayer(IDefaultBrowserLayer):
     """Marker interface that defines a browser layer."""
@@ -39,6 +42,10 @@ class IParticipant(Interface):
         required=False,
     )
 
+
+class StartBeforeEnd(Invalid):
+    __doc__ = _("error_invalid_date",
+                default=u"Invalid start or end date")
 
 class IWorkshop(Interface):
     """Workshop
@@ -88,4 +95,16 @@ class IWorkshop(Interface):
         title=_(u'label_cmo_workshop_press_release', u'Press Release'),
         required=False,
     )
+
+    @invariant
+    def validate_start_end(data):
+        if (
+            data.start_date
+            and data.end_date
+            and data.start_date > data.end_date
+        ):
+            raise StartBeforeEnd(
+                _("error_end_must_be_after_start_date",
+                  default=u"End date must be after start date.")
+            )
 
