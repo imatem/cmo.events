@@ -1,17 +1,12 @@
 # -*- coding: utf-8 -*-
 from cmo.events import _
 from plone.autoform.interfaces import IFormFieldProvider
-# from plone.directives import form
-from plone.autoform import directives
-from plone.supermodel import model
-from plone.supermodel.directives import fieldset
-from zope import schema
-from zope.interface import alsoProvides
-from zope.interface import provider
-
-from zope.component import adapter
-from zope.interface import implementer
 from plone.dexterity.interfaces import IDexterityContent
+from plone.supermodel import model
+from zope import schema
+from zope.component import adapter
+from zope.interface import provider
+from zope.interface import implementer
 
 
 @provider(IFormFieldProvider)
@@ -63,13 +58,10 @@ class IAcommodation(model.Schema):
         required=False,
     )
 
+
 @implementer(IAcommodation)
 @adapter(IDexterityContent)
 class Acommodation(object):
 
     def __init__(self, context):
         self.context = context
-    
-    
-
-# alsoProvides(IAcommodation, IFormFieldProvider)
