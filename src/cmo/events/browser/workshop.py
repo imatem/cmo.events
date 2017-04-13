@@ -19,3 +19,4 @@ class WorkshopView(WidgetsView):
     @property
     def additionalSchemata(self):
         return getAdditionalSchemata(context=self.context)
+

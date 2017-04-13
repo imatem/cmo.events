@@ -4,7 +4,7 @@
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       lang="en"
       metal:use-macro="context/main_template/macros/master"
-      i18n:domain="plone">
+      i18n:domain="cmo.events">
 <body>
 
 <!-- This view is in plone.app.dexterity.browser.container.pt -->
@@ -23,12 +23,32 @@
           <tal:widget tal:replace="structure widget/@@ploneform-render-widget"/>
       </tal:block>
   </fieldset>
-  Aqui debe estar la tabla de contenidos
+  
   <fieldset id="folder-listing">
-      <legend i18n:translate="" i18n:domain="plone">Contents</legend>
-      <tal:block define="view nocall:context/folder_listing; listing_macro view/macros/listing">
-          <metal:use_macro use-macro="listing_macro" />
-      </tal:block>
+      <legend i18n:translate="">Participants</legend>
+      <table class="listing">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th i18n:translate="label_cmo_firstname">Firstname</th>
+            <th i18n:translate="label_cmo_firstname">Lastname</th>
+          </tr>
+        </thead>
+        <tbody tal:define="items nocall:context/folder_listing/batch">
+        <!-- plone.app.contenttypes.browser.templates.listing.pt -->
+          <tr tal:repeat="item items">
+            <tal:block tal:define="obj item/getObject">
+              <td>
+                <a href="" tal:attributes="href item/getURL">
+                  <span tal:content="item/Title"/>
+                </a>
+              </td>
+              <td tal:content="obj/firstname"/>
+              <td tal:content="obj/lastname"/>
+            </tal:block>
+        </tr>
+        </tbody>
+      </table>
   </fieldset>
 
 </metal:content-core>
