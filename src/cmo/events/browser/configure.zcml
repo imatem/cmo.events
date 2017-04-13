@@ -27,4 +27,11 @@
         template="templates/workshop.pt"
         />
 
+  <browser:page
+    name="cmo-controlpanel"
+    for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+    class=".controlpanel.CMOControlPanelView"
+    permission="cmf.ManagePortal"
+    />
+
 </configure>
