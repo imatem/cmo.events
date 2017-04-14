@@ -41,4 +41,11 @@
     permission="cmf.AddPortalContent"
   />
 
+  <browser:page
+    name="update-participants"
+    for="cmo.events.interfaces.IWorkshop"
+    class=".update.UpdateParticipantsForm"
+    permission="cmf.AddPortalContent"
+  />
+
 </configure>
