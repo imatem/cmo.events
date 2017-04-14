@@ -34,4 +34,11 @@
     permission="cmf.ManagePortal"
     />
 
+  <browser:page
+    name="update-workshops"
+    for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
+    class=".update.UpdateWorshopsForm"
+    permission="cmf.AddPortalContent"
+  />
+
 </configure>
