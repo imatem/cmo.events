@@ -48,4 +48,13 @@
     permission="cmf.AddPortalContent"
   />
 
+  <!-- View for folder -->
+  <browser:page
+    name="folder_tabular_cmo"
+    template="templates/listing_tabular_cmo.pt"
+    for="plone.dexterity.interfaces.IDexterityContainer"
+    class="plone.app.contenttypes.browser.folder.FolderView"
+    layer="plone.app.contenttypes.interfaces.IPloneAppContenttypesLayer"
+    permission="zope2.View"
+  />
 </configure>
