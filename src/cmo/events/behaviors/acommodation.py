@@ -5,8 +5,8 @@ from plone.dexterity.interfaces import IDexterityContent
 from plone.supermodel import model
 from zope import schema
 from zope.component import adapter
-from zope.interface import provider
 from zope.interface import implementer
+from zope.interface import provider
 
 
 @provider(IFormFieldProvider)
