@@ -20,3 +20,57 @@ class WorkshopView(WidgetsView):
     def additionalSchemata(self):
         return getAdditionalSchemata(context=self.context)
 
+    def participants(self):
+
+        items = self.context.values()
+
+        participants = {
+            'headers': [],
+            'rows': []
+        }
+        if not items:
+            return participants
+        exclude_names = ('IBasic.title', 'IBasic.description', 'description',)
+        headers = []
+        obj = items[0]
+        viewitem = obj.unrestrictedTraverse('view')
+        viewitem.update()
+
+        default_widgets = viewitem.widgets.values()
+
+        for widget in default_widgets:
+            if widget.__name__ not in exclude_names:
+                headers.append(widget.label)
+
+        groups = viewitem.groups
+        for group in groups:
+            widgetsg = group.widgets.values()
+            for widget in widgetsg:
+                headers.append(widget.label)
+
+        participants['headers'] = headers
+
+        for item in items:
+            row = [item.absolute_url()]
+            # row = []
+
+            obj = item
+            viewitem = obj.unrestrictedTraverse('view')
+            viewitem.update()
+
+            default_widgets = viewitem.widgets.values()
+            groups = viewitem.groups
+
+            for widget in default_widgets:
+                if widget.__name__ not in exclude_names:
+                    # row.append(getattr(item, widget.__name__, None))
+                    row.append(widget.value)
+
+            for group in groups:
+                widgetsg = group.widgets.values()
+                for widget in widgetsg:
+                    # row.append(getattr(item, widget.name, None))
+                    row.append(widget.value)
+
+            participants['rows'].append(row)
+        return participants

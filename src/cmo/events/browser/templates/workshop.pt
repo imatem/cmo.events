@@ -25,32 +25,33 @@
   </fieldset>
   
   <fieldset id="folder-listing">
-      <legend i18n:translate="">Participants</legend>
-      <table class="listing">
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th i18n:translate="label_cmo_firstname">Firstname</th>
-            <th i18n:translate="label_cmo_firstname">Lastname</th>
-          </tr>
-        </thead>
-        <tbody tal:define="items nocall:context/folder_listing/batch">
-        <!-- plone.app.contenttypes.browser.templates.listing.pt -->
-          <tr tal:repeat="item items">
-            <tal:block tal:define="obj item/getObject">
-              <td>
-                <a href="" tal:attributes="href item/getURL">
-                  <span tal:content="item/Title"/>
-                </a>
-              </td>
-              <td tal:content="obj/firstname"/>
-              <td tal:content="obj/lastname"/>
-            </tal:block>
+    <legend i18n:translate="">Participants</legend>
+    <table class="listing" tal:define="participants view/participants;">
+      <thead>
+        <tr>
+          <th></th>
+          <tal:block tal:repeat="header participants/headers">
+            <th i18n:translate="">
+              <span tal:content="header"/>
+            </th>
+          </tal:block>
         </tr>
-        </tbody>
-      </table>
+      </thead>
+      <tbody>
+        <tr tal:repeat="row participants/rows">
+          <td tal:content="repeat/row/number">number</td>
+          <td>
+            <a href="" tal:attributes="href python:row[0]">
+              <span tal:content="python:row[1]"/>
+            </a>
+          </td>
+          <tal:block tal:repeat="column python:row[2:]">
+            <td tal:content="column"/>
+          </tal:block>
+        </tr>
+      </tbody>
+    </table>
   </fieldset>
-
 </metal:content-core>
 </metal:main>
 
