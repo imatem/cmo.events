@@ -62,7 +62,7 @@ class IWorkshop(Interface):
     )
 
     short_name = schema.TextLine(
-        title=_(u'Shorname'),
+        title=_(u'Shortname'),
         required=False,
     )
 
