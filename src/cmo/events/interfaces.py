@@ -61,7 +61,7 @@ class IWorkshop(Interface):
         required=False,
     )
 
-    shortname = schema.TextLine(
+    short_name = schema.TextLine(
         title=_(u'Shorname'),
         required=False,
     )
@@ -76,7 +76,7 @@ class IWorkshop(Interface):
         required=False,
     )
 
-    workshop_type = schema.TextLine(
+    event_type = schema.TextLine(
         title=_(u'label_cmo_workshop_type', u'Workshop Type'),
         required=False,
     )
@@ -93,7 +93,7 @@ class IWorkshop(Interface):
         required=False,
     )
 
-    press_realease = schema.TextLine(
+    press_release = schema.TextLine(
         title=_(u'label_cmo_workshop_press_release', u'Press Release'),
         required=False,
     )
