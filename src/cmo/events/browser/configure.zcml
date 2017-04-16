@@ -37,7 +37,7 @@
   <browser:page
     name="update-workshops"
     for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
-    class=".update.UpdateWorshopsForm"
+    class=".update.UpdateWorkshopsForm"
     permission="cmf.AddPortalContent"
   />
 

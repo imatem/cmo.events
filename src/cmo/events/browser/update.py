@@ -39,7 +39,7 @@ class IMyForm(model.Schema):
     )
 
 
-class UpdateWorshopsForm(form.Form):
+class UpdateWorkshopsForm(form.Form):
     """Update workshops from Birs DB."""
 
     fields = field.Fields(IMyForm)
