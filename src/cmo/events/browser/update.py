@@ -1,11 +1,15 @@
 # -*- coding: utf-8 -*-
 
+from cmo.events import _
 from datetime import datetime
 from plone import api
+from plone.supermodel import model
 from requests.exceptions import ConnectionError
 from requests.exceptions import HTTPError
 from z3c.form import button
+from z3c.form import field
 from z3c.form import form
+from zope import schema
 
 import logging
 import requests
@@ -26,15 +30,30 @@ headers = {
 }
 
 
+class IMyForm(model.Schema):
+
+    year = schema.Choice(
+        title=_(u"Year"),
+        values=[u'2015', u'2016', u'2017', u'2018'],
+        required=False,
+    )
+
+
 class UpdateWorshopsForm(form.Form):
     """Update workshops from Birs DB."""
 
-    @button.buttonAndHandler(u'Update Workshops')
+    fields = field.Fields(IMyForm)
+    ignoreContext = True
+
+    label = _(u"Workshops Administration")
+
+    @button.buttonAndHandler(_(u'Update Workshops'))
     def handle_update_workshops(self, action):
         """Update workshops list
         """
         logger.info('Updating Workshops')
-        year = str(2017)
+        data, errors = self.extractData()
+        year = data['year']
         birs_uri = api.portal.get_registry_record('cmo.birs_api_uri')
         url = '/'.join([birs_uri, 'event_data_for_year', year])
         try:
@@ -44,7 +63,7 @@ class UpdateWorshopsForm(form.Form):
             api.portal.show_message(err, self.request, type=u'error')
         else:
             self.update_workshops(year, req.json())
-            api.portal.show_message(u'Updated!', self.request, type=u'info')
+            api.portal.show_message(_(u'Updated!'), self.request, type=u'info')
         logger.info('Done.')
 
     def update_workshops(self, year, json_data):
@@ -72,7 +91,7 @@ class UpdateWorshopsForm(form.Form):
 class UpdateParticipantsForm(form.Form):
     """Update Participants from Birs DB."""
 
-    @button.buttonAndHandler(u'Update participants')
+    @button.buttonAndHandler(_(u'Update participants'))
     def handle_update_participants(self, action):
         """Update participants list
         """
@@ -86,7 +105,7 @@ class UpdateParticipantsForm(form.Form):
             api.portal.show_message(err, self.request, type=u'error')
         else:
             self.update_participants(req.json())
-            api.portal.show_message(u'Updated!', self.request, type=u'info')
+            api.portal.show_message(_(u'Updated!'), self.request, type=u'info')
         logger.info('Done.')
 
     def update_participants(self, json_data):
