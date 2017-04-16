@@ -109,12 +109,21 @@ class UpdateParticipantsForm(form.Form):
         logger.info('Done.')
 
     def update_participants(self, json_data):
-        """
+        """Update participants list
         """
         for item in json_data:
             if item['Person']['email'] not in self.context:
+                kargs = dict(item['Person'])
+                kargs.update(item['Membership'])
+                kargs['workshop'] = item['Workshop']
+                for d in ['arrival_date', 'replied_at', 'departure_date']:
+                    if kargs[d] is not None:
+                        kargs[d] = datetime.strptime(kargs[d], '%Y-%m-%d %H:%M:%S')  # noqa
+                    else:
+                        del kargs[d]
                 api.content.create(
                     type='Participant',
-                    id=item['Person']['email'],
-                    title=item['Person']['firstname'],
-                    container=self.context)
+                    id=kargs['email'],
+                    title=kargs['firstname'],
+                    container=self.context,
+                    **kargs)
