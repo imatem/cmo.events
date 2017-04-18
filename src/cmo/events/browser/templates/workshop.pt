@@ -5,6 +5,12 @@
       lang="en"
       metal:use-macro="context/main_template/macros/master"
       i18n:domain="cmo.events">
+ 
+   <metal:block fill-slot="style_slot">
+    <link href="++plone++cmo/datatables/css/jquery.dataTables.min.css"
+          rel="stylesheet" type="text/css"/>
+  </metal:block>
+
 <body>
 
 <!-- This view is in plone.app.dexterity.browser.container.pt -->
@@ -24,19 +30,36 @@
       </tal:block>
   </fieldset>
   
-  <fieldset id="folder-listing">
+  <fieldset id="folder-listing" tal:define="participants view/participants;">
     <legend i18n:translate="">Participants</legend>
-    <table class="listing" tal:define="participants view/participants;">
+
+    <div>
+      <tal:block tal:repeat="header participants/headers">
+        <a class="toggle-vis" tal:attributes="data-column repeat/header/number"
+        tal:content="header"/> - 
+      </tal:block>
+    </div>
+    <br/>
+    <table id="workshoptable" class="listing" cellspacing="0" width="100%">
       <thead>
         <tr>
-          <th></th>
+          <th>Number</th>
           <tal:block tal:repeat="header participants/headers">
-            <th i18n:translate="">
-              <span tal:content="header"/>
-            </th>
+            <th i18n:translate="" tal:content="header"/>
           </tal:block>
         </tr>
       </thead>
+
+      <tfoot>
+        <tr>
+          <th>Number</th>
+          <tal:block tal:repeat="header participants/headers">
+            <th i18n:translate="" tal:content="header"/>
+          </tal:block>
+        </tr>
+      </tfoot>
+
+
       <tbody>
         <tr tal:repeat="row participants/rows">
           <td tal:content="repeat/row/number">number</td>
