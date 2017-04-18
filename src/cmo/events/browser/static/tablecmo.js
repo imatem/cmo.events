@@ -5,7 +5,7 @@ require([
 
 $(document).ready(function() {
     var table = $('#workshoptable').DataTable( {       
-        "scrollY": "600px",
+        // "scrollY": "600px",
         "paging": false,
         // "sScrollY": "600px",
         // "bPaginate": false,
@@ -13,7 +13,7 @@ $(document).ready(function() {
         "bAutoWidth": true,
         // "info":     false,
         "searching": false,
-        // "sScrollX": "100%",
+        "sScrollX": "100%",
         // "sScrollXInner": "100%",
     } );
     $('a.toggle-vis').on( 'click', function (e) {

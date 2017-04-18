@@ -1,6 +1,15 @@
 /*
  * Table styles
  */
+
+div.dataTables_scrollBody{
+  overflow: visible !important;
+}
+
+div.dataTables_scrollHead{
+  overflow: visible !important;
+}
+
 table.dataTable {
   width: 100%;
   margin: 0 auto;

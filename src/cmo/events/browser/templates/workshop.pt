@@ -9,6 +9,8 @@
    <metal:block fill-slot="style_slot">
     <link href="++plone++cmo/datatables/css/jquery.dataTables.min.css"
           rel="stylesheet" type="text/css"/>
+    <link href="++plone++cmo/datatables/css/jquery.dataTables.css"
+          rel="stylesheet" type="text/css"/>
   </metal:block>
 
 <body>
