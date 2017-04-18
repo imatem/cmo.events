@@ -4,7 +4,7 @@
          prefix="cmo" />
     <records prefix="plone.resources/tablecmo"
             interface='Products.CMFPlone.interfaces.IResourceRegistry'>
-        <value key="js">++plone++cmo/tablecmo.js</value>        
+        <value key="js">++plone++cmo/tablecmo.js</value>     
     </records>
 
 </registry>

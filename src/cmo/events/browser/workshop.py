@@ -2,8 +2,8 @@
 from plone.autoform.view import WidgetsView
 from plone.dexterity.interfaces import IDexterityFTI
 from plone.dexterity.utils import getAdditionalSchemata
-from zope.component import getUtility
 from Products.CMFPlone.resources import add_resource_on_request
+from zope.component import getUtility
 
 
 class WorkshopView(WidgetsView):
