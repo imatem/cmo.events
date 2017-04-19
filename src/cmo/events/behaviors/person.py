@@ -29,12 +29,13 @@ class IPerson(model.Schema):
             'lastname',
             'email',
             'country',
+            'gender',
             'affiliation',
-            'grade',
-            'home',
+            'salutation',
+            'url',
             'phone',
-            'year',
-            'status',
+            'phd_year',
+            'academic_status',
         ]
     )
 
@@ -67,6 +68,15 @@ class IPerson(model.Schema):
         ),
         required=False,
     )
+
+    gender = schema.TextLine(
+        title=_(
+            u'label_cmo_gender',
+            default=u'Gender'
+        ),
+        required=False,
+    )
+
     affiliation = schema.TextLine(
         title=_(
             u'label_cmo_affiliation',
@@ -75,7 +85,8 @@ class IPerson(model.Schema):
         required=False,
     )
 
-    grade = schema.TextLine(
+    # change to saludation for web service
+    salutation = schema.TextLine(
         title=_(
             u'label_cmo_grade',
             default=u'Grade'
@@ -83,7 +94,7 @@ class IPerson(model.Schema):
         required=False,
     )
 
-    home = schema.TextLine(
+    url = schema.TextLine(
         title=_(
             u'label_cmo_home',
             default=u'Home'
@@ -99,7 +110,7 @@ class IPerson(model.Schema):
         required=False,
     )
 
-    year = schema.TextLine(
+    phd_year = schema.TextLine(
         title=_(
             u'label_cmo_year',
             default=u'Graduation year'
@@ -107,7 +118,7 @@ class IPerson(model.Schema):
         required=False,
     )
 
-    status = schema.TextLine(
+    academic_status = schema.TextLine(
         title=_(
             u'label_cmo_status',
             default=u'Status'

@@ -21,19 +21,19 @@ class IMembership(model.Schema):
             u'Membership'
         ),
         fields=[
-            'arrival',
-            'departure',
+            'arrival_date',
+            'departure_date',
             'attendance',
             'role',
-            'replied',
-            'hasguest',
-            'specialInfo',
-            'offsite',
-            'eventNotes',
+            'replied_at',
+            'has_guest',
+            'special_info',
+            'off_site',
+            'event_notes',
         ]
     )
 
-    arrival = schema.TextLine(
+    arrival_date = schema.TextLine(
         title=_(
             u'label_cmo_arrival',
             default=u'Arrival Date'
@@ -41,7 +41,7 @@ class IMembership(model.Schema):
         required=False,
     )
 
-    departure = schema.TextLine(
+    departure_date = schema.TextLine(
         title=_(
             u'label_cmo_departure',
             default=u'Departure'
@@ -62,7 +62,7 @@ class IMembership(model.Schema):
         ),
         required=False,
     )
-    replied = schema.TextLine(
+    replied_at = schema.TextLine(
         title=_(
             u'label_cmo_replied',
             default=u'Replied At'
@@ -70,7 +70,7 @@ class IMembership(model.Schema):
         required=False,
     )
 
-    hasguest = schema.TextLine(
+    has_guest = schema.TextLine(
         title=_(
             u'label_cmo_hasguest',
             default=u'Has Guest'
@@ -78,7 +78,7 @@ class IMembership(model.Schema):
         required=False,
     )
 
-    specialInfo = schema.TextLine(
+    special_info = schema.TextLine(
         title=_(
             u'label_cmo_specialInfo',
             default=u'Special Info'
@@ -86,7 +86,7 @@ class IMembership(model.Schema):
         required=False,
     )
 
-    offsite = schema.TextLine(
+    off_site = schema.TextLine(
         title=_(
             u'label_cmo_offsite',
             default=u'Offsite'
@@ -94,7 +94,7 @@ class IMembership(model.Schema):
         required=False,
     )
 
-    eventNotes = schema.TextLine(
+    event_notes = schema.TextLine(
         title=_(
             u'label_cmo_eventNotes',
             default=u'Event Notes'
