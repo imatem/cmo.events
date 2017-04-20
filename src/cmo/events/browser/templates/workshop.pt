@@ -5,6 +5,18 @@
       lang="en"
       metal:use-macro="context/main_template/macros/master"
       i18n:domain="cmo.events">
+
+  <metal:css fill-slot="style_slot">
+    <style type="text/css">
+      .dataTables_scrollHead{
+        overflow: visible !important;
+      }
+      .dataTables_scrollBody{
+        overflow: visible !important;
+      }
+    </style>
+  </metal:css>
+
 <body>
 
 <!-- This view is in plone.app.dexterity.browser.container.pt -->
@@ -21,7 +33,9 @@
         // "info":     false,
         "searching": false,
         "sScrollX": "100%",
-        // "sScrollXInner": "100%",
+        "sScrollXInner": "100%",
+        //fixedHeader: true,
+        //responsive: true,
         dom: 'Bfrtip',
         buttons: [
             'copy', 'csv', 'excel', 'pdf', 'print'
@@ -63,7 +77,7 @@
     <div>
       <tal:block tal:repeat="header participants/headers">
         <a class="toggle-vis" tal:attributes="data-column repeat/header/number"
-        tal:content="header"/>
+        tal:content="header"/> -
       </tal:block>
     </div>
     <br/>
@@ -76,17 +90,6 @@
           </tal:block>
         </tr>
       </thead>
-
-      <tfoot>
-        <tr>
-          <th>Number</th>
-          <tal:block tal:repeat="header participants/headers">
-            <th i18n:translate="" tal:content="header"/>
-          </tal:block>
-        </tr>
-      </tfoot>
-
-
       <tbody>
         <tr tal:repeat="row participants/rows">
           <td tal:content="repeat/row/number">number</td>
