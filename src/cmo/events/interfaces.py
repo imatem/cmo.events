@@ -6,6 +6,7 @@ from zope.interface import Interface
 from zope.interface import Invalid
 from zope.interface import invariant
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
+from plone.app.textfield import RichText
 
 
 class ICmoEventsLayer(IDefaultBrowserLayer):
@@ -93,7 +94,7 @@ class IWorkshop(Interface):
         required=False,
     )
 
-    press_release = schema.TextLine(
+    press_release = RichText(
         title=_(u'label_cmo_workshop_press_release', u'Press Release'),
         required=False,
     )
