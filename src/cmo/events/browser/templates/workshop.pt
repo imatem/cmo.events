@@ -56,10 +56,17 @@
 });
 </script>
 <metal:content-core define-macro="content-core">
-
-
-
-
+  <div>
+    <form name="update_form"
+        action="#"
+        method="POST">
+      <input class="btn btn-small searchPage searchButton allowMultiSubmit"
+            type="submit"
+            value="Update"
+      />
+    </form>
+    <hr/>
+  </div>
 
   <tal:block repeat="widget view/widgets/values">
       <tal:block tal:condition="python:widget.__name__ not in ('IBasic.title', 'IBasic.description', 'title', 'description',)">
