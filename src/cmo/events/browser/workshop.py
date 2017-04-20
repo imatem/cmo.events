@@ -25,7 +25,7 @@ class WorkshopView(WidgetsView):
         # utility function to add resource to rendered page
         # add_resource_on_request(self.request, 'jquery12')
         # add_resource_on_request(self.request, 'jquerydatatablemin')
-        add_resource_on_request(self.request, 'tablecmo')
+        # add_resource_on_request(self.request, 'tablecmo')
         return super(WorkshopView, self).__call__()
 
     def participants(self):
