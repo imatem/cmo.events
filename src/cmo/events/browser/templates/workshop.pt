@@ -5,19 +5,45 @@
       lang="en"
       metal:use-macro="context/main_template/macros/master"
       i18n:domain="cmo.events">
- 
-   <metal:block fill-slot="style_slot">
-    <link href="++plone++cmo/datatables/css/jquery.dataTables.min.css"
-          rel="stylesheet" type="text/css"/>
-    <link href="++plone++cmo/datatables/css/jquery.dataTables.css"
-          rel="stylesheet" type="text/css"/>
-  </metal:block>
-
 <body>
 
 <!-- This view is in plone.app.dexterity.browser.container.pt -->
 <metal:main fill-slot="content-core">
+  <script type="text/javascript" charset="utf-8">
+  $(document).ready(function() {
+    var table = $('#workshoptable').DataTable( {
+        // "scrollY": "600px",
+        "paging": false,
+        // "sScrollY": "600px",
+        // "bPaginate": false,
+        // "bScrollCollapse": true,
+        "bAutoWidth": true,
+        // "info":     false,
+        "searching": false,
+        "sScrollX": "100%",
+        // "sScrollXInner": "100%",
+        dom: 'Bfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ]
+    } );
+    $('a.toggle-vis').on( 'click', function (e) {
+         e.preventDefault();
+
+         // Get the column API object
+         var column = table.column( $(this).attr('data-column') );
+
+         // Toggle the visibility
+         column.visible( ! column.visible() );
+     } );
+});
+</script>
 <metal:content-core define-macro="content-core">
+
+
+
+
+
   <tal:block repeat="widget view/widgets/values">
       <tal:block tal:condition="python:widget.__name__ not in ('IBasic.title', 'IBasic.description', 'title', 'description',)">
           <tal:widget tal:replace="structure widget/@@ploneform-render-widget"/>
@@ -31,18 +57,17 @@
           <tal:widget tal:replace="structure widget/@@ploneform-render-widget"/>
       </tal:block>
   </fieldset>
-  
   <fieldset id="folder-listing" tal:define="participants view/participants;">
     <legend i18n:translate="">Participants</legend>
 
     <div>
       <tal:block tal:repeat="header participants/headers">
         <a class="toggle-vis" tal:attributes="data-column repeat/header/number"
-        tal:content="header"/> - 
+        tal:content="header"/>
       </tal:block>
     </div>
     <br/>
-    <table id="workshoptable" class="listing" cellspacing="0" width="100%">
+    <table id="workshoptable" class="display nowrap" cellspacing="0" width="100%">
       <thead>
         <tr>
           <th>Number</th>
