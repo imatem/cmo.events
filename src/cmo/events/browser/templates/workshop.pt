@@ -14,6 +14,9 @@
       .dataTables_scrollBody{
         overflow: visible !important;
       }
+      .documentDescription{
+        display:none !important;
+      }
     </style>
   </metal:css>
 

@@ -2,7 +2,6 @@
 from plone.autoform.view import WidgetsView
 from plone.dexterity.interfaces import IDexterityFTI
 from plone.dexterity.utils import getAdditionalSchemata
-from Products.CMFPlone.resources import add_resource_on_request
 from zope.component import getUtility
 
 
@@ -23,8 +22,6 @@ class WorkshopView(WidgetsView):
 
     def __call__(self):
         # utility function to add resource to rendered page
-        # add_resource_on_request(self.request, 'jquery12')
-        # add_resource_on_request(self.request, 'jquerydatatablemin')
         # add_resource_on_request(self.request, 'tablecmo')
         return super(WorkshopView, self).__call__()
 

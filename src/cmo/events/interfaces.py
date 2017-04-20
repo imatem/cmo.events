@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 """Module where all interfaces, events and exceptions live."""
 from cmo.events import _
+from plone.app.textfield import RichText
 from zope import schema
 from zope.interface import Interface
 from zope.interface import Invalid
 from zope.interface import invariant
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
-from plone.app.textfield import RichText
 
 
 class ICmoEventsLayer(IDefaultBrowserLayer):
