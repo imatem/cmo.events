@@ -41,7 +41,7 @@
         //responsive: true,
         dom: 'Bfrtip',
         buttons: [
-            'copy', 'csv', 'excel', 'pdf', 'print'
+            'copy', 'csv', 'excel'
         ]
     } );
     $('a.toggle-vis').on( 'click', function (e) {
