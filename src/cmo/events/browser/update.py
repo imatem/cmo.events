@@ -33,7 +33,7 @@ headers = {
 class IMyForm(model.Schema):
 
     year = schema.Choice(
-        title=_(u"Year"),
+        title=_(u'Year'),
         values=[u'2015', u'2016', u'2017', u'2018'],
         required=False,
     )
@@ -45,7 +45,7 @@ class UpdateWorkshopsForm(form.Form):
     fields = field.Fields(IMyForm)
     ignoreContext = True
 
-    label = _(u"Workshops Administration")
+    label = _(u'Workshops Administration')
 
     @button.buttonAndHandler(_(u'Update Workshops'))
     def handle_update_workshops(self, action):
