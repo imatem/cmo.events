@@ -96,8 +96,8 @@ class IPerson(model.Schema):
 
     url = schema.TextLine(
         title=_(
-            u'label_cmo_home',
-            default=u'Home'
+            u'label_cmo_webpage',
+            default=u'Web page'
         ),
         required=False,
     )
@@ -121,7 +121,7 @@ class IPerson(model.Schema):
     academic_status = schema.TextLine(
         title=_(
             u'label_cmo_status',
-            default=u'Status'
+            default=u'Academic Status'
         ),
         required=False,
     )
