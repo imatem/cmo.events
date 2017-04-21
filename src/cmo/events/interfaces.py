@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Module where all interfaces, events and exceptions live."""
 from cmo.events import _
+from plone.app.textfield import RichText
 from zope import schema
 from zope.interface import Interface
 from zope.interface import Invalid
@@ -93,7 +94,7 @@ class IWorkshop(Interface):
         required=False,
     )
 
-    press_release = schema.TextLine(
+    press_release = RichText(
         title=_(u'label_cmo_workshop_press_release', u'Press Release'),
         required=False,
     )

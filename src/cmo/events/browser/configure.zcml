@@ -12,8 +12,10 @@
       />
 
   <!-- Publish static files -->
+  <!-- Incluir como ++plone++cmo/datatables/css/jquery.dataTables.min.css -->
+  <!-- Incluir como ++plone++cmo/datatables/js/jquery.dataTables.min.js -->
   <plone:static
-      name="cmo.events"
+      name="cmo"
       type="plone"
       directory="static"
       />
