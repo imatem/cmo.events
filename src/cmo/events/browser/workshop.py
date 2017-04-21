@@ -5,6 +5,7 @@ from plone import api
 from plone.autoform.view import WidgetsView
 from plone.dexterity.interfaces import IDexterityFTI
 from plone.dexterity.utils import getAdditionalSchemata
+from plone.i18n.normalizer import idnormalizer
 from requests.exceptions import ConnectionError
 from requests.exceptions import HTTPError
 from zope.component import getUtility
@@ -135,9 +136,11 @@ class WorkshopView(WidgetsView):
                         kargs[d] = datetime.strptime(kargs[d], '%Y-%m-%d %H:%M:%S')  # noqa
                     else:
                         del kargs[d]
+
+                id = idnormalizer.normalize(kargs['email'])
                 api.content.create(
                     type='Participant',
-                    id=kargs['email'],
+                    id=id,
                     title=kargs['firstname'],
                     container=self.context,
                     **kargs)
