@@ -17,6 +17,14 @@
       .documentDescription{
         display:none !important;
       }
+
+      a.ashow{
+        color:#007bb1;
+      }
+
+      a.ahide{
+        color:darkgray;
+      }
     </style>
   </metal:css>
 
@@ -52,6 +60,17 @@
 
          // Toggle the visibility
          column.visible( ! column.visible() );
+
+         if (column.visible()){
+          $(this).removeClass("ahide").addClass("ashow");
+         }
+
+         else{
+          $(this).removeClass("ashow").addClass("ahide");
+         }
+
+
+
      } );
 });
 </script>
@@ -68,10 +87,19 @@
     <hr/>
   </div>
 
-  <tal:block repeat="widget view/widgets/values">
-      <tal:block tal:condition="python:widget.__name__ not in ('IBasic.title', 'IBasic.description', 'title', 'description',)">
-          <tal:widget tal:replace="structure widget/@@ploneform-render-widget"/>
-      </tal:block>
+  <tal:block tal:define="widgetscmo view/widgets/values">
+    <tal:block tal:condition="widgetscmo">
+      <table tal:define="mwidgets python:[ widget for widget in widgetscmo if widget.__name__ not in ('IBasic.title', 'IBasic.description', 'title', 'description',)]; wlen python:len(mwidgets);">
+        <tr>
+          <td tal:repeat="widget python: mwidgets[:wlen-1]">
+            <tal:widget tal:replace="structure widget/@@ploneform-render-widget"/>
+          </td>
+        </tr>
+        <tr tal:define="lastwidget python:mwidgets[-1]">
+          <td tal:attributes="colspan python: wlen-1"><tal:widget tal:replace="structure widget/@@ploneform-render-widget"/></td>
+        </tr>
+      </table>
+    </tal:block>
   </tal:block>
 
   <fieldset tal:repeat="group view/groups"
@@ -86,7 +114,7 @@
 
     <div>
       <tal:block tal:repeat="header participants/headers">
-        <a class="toggle-vis" tal:attributes="data-column repeat/header/number"
+        <a class="toggle-vis ashow" tal:attributes="data-column repeat/header/number"
         tal:content="header"/> -
       </tal:block>
     </div>
