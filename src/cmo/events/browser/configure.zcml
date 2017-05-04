@@ -30,6 +30,13 @@
         />
 
   <browser:page
+        name="edit"
+        for="cmo.events.interfaces.IParticipant"
+        class=".participant.ParticipantEditView"
+        permission="cmf.ModifyPortalContent"
+        />
+
+  <browser:page
     name="cmo-controlpanel"
     for="Products.CMFPlone.interfaces.IPloneSiteRoot"
     class=".controlpanel.CMOControlPanelView"
