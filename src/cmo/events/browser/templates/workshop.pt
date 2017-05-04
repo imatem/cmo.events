@@ -42,7 +42,7 @@
         dom: 'Bfrtip',
         buttons: [
             {
-              extend: 'copy',
+              extend: 'copyHtml5',
               exportOptions: {
                 columns: [ 0, ':visible' ]
               }
