@@ -20,6 +20,9 @@
     </style>
   </metal:css>
 
+  <!-- <metal:block fill-slot="top_slot"
+      tal:define="dummy python:request.set('disable_border',1);"/>
+ -->
 <body>
 
 <!-- This view is in plone.app.dexterity.browser.container.pt -->
@@ -38,7 +41,7 @@
         "sScrollX": "100%",
         "sScrollXInner": "100%",
         //fixedHeader: true,
-        //responsive: true,
+        responsive: true,
         dom: 'Bfrtip',
         buttons: [
             {
