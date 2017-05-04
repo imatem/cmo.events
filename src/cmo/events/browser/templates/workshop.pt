@@ -120,7 +120,9 @@
         <tr tal:repeat="row participants/rows">
           <td tal:content="repeat/row/number">number</td>
           <td>
-            <a href="" tal:attributes="href python:row[0]">
+            <a class="editparticipant pat-plone-modal"
+              data-pat-plone-modal='{"actionOptions": {"disableAjaxFormSubmit":true, "redirectOnResponse":true}}'
+              href="" tal:attributes="href python:row[0] + '/edit'">
               <span tal:content="python:row[1]"/>
             </a>
           </td>
