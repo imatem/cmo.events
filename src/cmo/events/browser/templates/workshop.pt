@@ -49,7 +49,25 @@
         //responsive: true,
         dom: 'Bfrtip',
         buttons: [
-            'copy', 'csv', 'excel'
+            {
+              extend: 'copyHtml5',
+              exportOptions: {
+                columns: [ 0, ':visible' ]
+              }
+            },
+            {
+                extend: 'csvHtml5',
+                exportOptions: {
+                    columns: [ 0, ':visible' ]
+                }
+            },
+            {
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: [ 0, ':visible' ]
+                }
+            },
+
         ]
     } );
     $('a.toggle-vis').on( 'click', function (e) {
@@ -74,6 +92,14 @@
      } );
 });
 </script>
+
+
+<!-- {
+  extend: 'copyHtml5',
+  exportOptions: {
+    columns: [ 0, ':visible' ]
+  }
+}, -->
 <metal:content-core define-macro="content-core">
   <div>
     <form name="update_form"
