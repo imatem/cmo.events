@@ -34,7 +34,7 @@
         // "bScrollCollapse": true,
         "bAutoWidth": true,
         // "info":     false,
-        "searching": false,
+        "searching": true,
         "sScrollX": "100%",
         "sScrollXInner": "100%",
         //fixedHeader: true,
@@ -42,7 +42,7 @@
         dom: 'Bfrtip',
         buttons: [
             {
-              extend: 'copyHtml5',
+              extend: 'copy',
               exportOptions: {
                 columns: [ 0, ':visible' ]
               }
