@@ -17,14 +17,6 @@
       .documentDescription{
         display:none !important;
       }
-
-      a.ashow{
-        color:#007bb1;
-      }
-
-      a.ahide{
-        color:darkgray;
-      }
     </style>
   </metal:css>
 
@@ -67,39 +59,12 @@
                     columns: [ 0, ':visible' ]
                 }
             },
-
+            'colvis',
         ]
     } );
-    $('a.toggle-vis').on( 'click', function (e) {
-         e.preventDefault();
-
-         // Get the column API object
-         var column = table.column( $(this).attr('data-column') );
-
-         // Toggle the visibility
-         column.visible( ! column.visible() );
-
-         if (column.visible()){
-          $(this).removeClass("ahide").addClass("ashow");
-         }
-
-         else{
-          $(this).removeClass("ashow").addClass("ahide");
-         }
-
-
-
-     } );
 });
 </script>
 
-
-<!-- {
-  extend: 'copyHtml5',
-  exportOptions: {
-    columns: [ 0, ':visible' ]
-  }
-}, -->
 <metal:content-core define-macro="content-core">
   <div>
     <form name="update_form"
@@ -138,12 +103,6 @@
   <fieldset id="folder-listing" tal:define="participants view/participants;">
     <legend i18n:translate="">Participants</legend>
 
-    <div>
-      <tal:block tal:repeat="header participants/headers">
-        <a class="toggle-vis ashow" tal:attributes="data-column repeat/header/number"
-        tal:content="header"/> -
-      </tal:block>
-    </div>
     <br/>
     <table id="workshoptable" class="display nowrap" cellspacing="0" width="100%">
       <thead>
