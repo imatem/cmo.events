@@ -41,7 +41,7 @@
         "sScrollX": "100%",
         "sScrollXInner": "100%",
         //fixedHeader: true,
-        responsive: true,
+        //responsive: true,
         dom: 'Bfrtip',
         buttons: [
             {
@@ -111,6 +111,7 @@
       <thead>
         <tr>
           <th>Number</th>
+          <th>View/Edit</th>
           <tal:block tal:repeat="header participants/headers">
             <th i18n:translate="" tal:content="header"/>
           </tal:block>
@@ -122,11 +123,17 @@
           <td>
             <a class="editparticipant pat-plone-modal"
               data-pat-plone-modal='{"actionOptions": {"disableAjaxFormSubmit":true, "redirectOnResponse":true}}'
+              href="" tal:attributes="href python:row[0]">
+              View
+            </a>
+            /
+            <a class="editparticipant pat-plone-modal"
+              data-pat-plone-modal='{"actionOptions": {"disableAjaxFormSubmit":true, "redirectOnResponse":true}}'
               href="" tal:attributes="href python:row[0] + '/edit'">
-              <span tal:content="python:row[1]"/>
+              Edit
             </a>
           </td>
-          <tal:block tal:repeat="column python:row[2:]">
+          <tal:block tal:repeat="column python:row[1:]">
             <td tal:content="column"/>
           </tal:block>
         </tr>
