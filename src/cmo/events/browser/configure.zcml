@@ -37,6 +37,14 @@
         />
 
   <browser:page
+        name="view"
+        for="cmo.events.interfaces.IParticipant"
+        class=".participant.ParticipantView"
+        permission="zope2.View"
+        template="templates/participant_view.pt"
+        />
+
+  <browser:page
     name="cmo-controlpanel"
     for="Products.CMFPlone.interfaces.IPloneSiteRoot"
     class=".controlpanel.CMOControlPanelView"

@@ -62,7 +62,12 @@ class WorkshopView(WidgetsView):
         }
         if not items:
             return participants
-        exclude_names = ('IBasic.title', 'IBasic.description', 'description', 'title')
+        exclude_names = (
+            'IBasic.title',
+            'IBasic.description',
+            'description',
+            'title'
+        )
         headers = []
         obj = items[0]
         viewitem = obj.unrestrictedTraverse('view')
