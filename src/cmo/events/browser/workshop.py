@@ -216,7 +216,6 @@ class WorkshopView(WidgetsView):
 
         return orderparticipants
 
-
     def handle_update_participants(self):
         """Update participants list
         """
