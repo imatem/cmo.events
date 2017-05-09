@@ -43,6 +43,12 @@
         //fixedHeader: true,
         //responsive: true,
         dom: 'Bfrtip',
+        columnDefs: [
+          {
+            targets: [16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26],
+            visible: false,
+          }
+        ],
         buttons: [
             {
               extend: 'copyHtml5',
@@ -62,7 +68,11 @@
                     columns: [ 0, ':visible' ]
                 }
             },
-            'colvis',
+            {
+                extend: 'colvis',
+                collectionLayout: 'fixed three-column'
+            },
+
         ]
     } );
 });
@@ -103,7 +113,7 @@
           <tal:widget tal:replace="structure widget/@@ploneform-render-widget"/>
       </tal:block>
   </fieldset>
-  <fieldset id="folder-listing" tal:define="participants view/participants;">
+  <fieldset id="folder-listing" tal:define="participants view/participantsWithcolumnOrder">
     <legend i18n:translate="">Participants</legend>
 
     <br/>
@@ -125,9 +135,7 @@
               data-pat-plone-modal='{"actionOptions": {"disableAjaxFormSubmit":true, "redirectOnResponse":true}}'
               href="" tal:attributes="href python:row[0]">
               View
-            </a>
-            /
-            <a class="editparticipant pat-plone-modal"
+            </a>/<a class="editparticipant pat-plone-modal"
               data-pat-plone-modal='{"actionOptions": {"disableAjaxFormSubmit":true, "redirectOnResponse":true}}'
               href="" tal:attributes="href python:row[0] + '/edit'">
               Edit
