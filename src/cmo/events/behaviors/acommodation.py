@@ -28,11 +28,12 @@ class IAcommodation(model.Schema):
         ]
     )
 
-    hotel = schema.TextLine(
+    hotel = schema.Choice(
         title=_(
             u'label_cmo_hotel',
             default=u'Hotel'
         ),
+        values=[u'Los Laureles', u'Angel Inn', u'Sin Hotel'],
         required=False,
     )
 

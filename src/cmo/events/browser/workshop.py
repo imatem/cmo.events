@@ -106,8 +106,11 @@ class WorkshopView(WidgetsView):
             for group in groups:
                 widgetsg = group.widgets.values()
                 for widget in widgetsg:
+                    if widget.__name__ == 'IAcommodation.hotel':
+                        row.append(','.join(widget.value))
                     # row.append(getattr(item, widget.name, None))
-                    row.append(widget.value)
+                    else:
+                        row.append(widget.value)
 
             participants['rows'].append(row)
         return participants
