@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from cmo.events import _
 from datetime import datetime
+from operator import itemgetter
 from plone import api
 from plone.autoform.view import WidgetsView
 from plone.dexterity.interfaces import IDexterityFTI
@@ -213,6 +214,26 @@ class WorkshopView(WidgetsView):
 
         except Exception:
             return participants
+
+        hotels = {
+            u'Los Laureles': 1,
+            u'Angel Inn': 2,
+            u'Sin Hotel': 3,
+
+        }
+
+        aux_applications = [
+            (
+                app,
+                hotels.get(app[8], 4),
+                idnormalizer.normalize(app[8]),
+                idnormalizer.normalize(app[2]),
+                idnormalizer.normalize(app[3])
+            ) for app in orderparticipants['rows']
+        ]
+        aux_sorted = sorted(aux_applications, key=itemgetter(1, 2, 3, 4))
+        orows = [i[0] for i in aux_sorted]
+        orderparticipants['rows'] = orows
 
         return orderparticipants
 
