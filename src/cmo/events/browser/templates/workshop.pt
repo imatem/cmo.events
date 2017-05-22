@@ -133,15 +133,15 @@
           <td>
             <a class="editparticipant pat-plone-modal"
               data-pat-plone-modal='{"actionOptions": {"disableAjaxFormSubmit":true, "redirectOnResponse":true}}'
-              href="" tal:attributes="href python:row[0]">
+              href="" tal:attributes="href python:row[1]">
               View
             </a>/<a class="editparticipant pat-plone-modal"
               data-pat-plone-modal='{"actionOptions": {"disableAjaxFormSubmit":true, "redirectOnResponse":true}}'
-              href="" tal:attributes="href python:row[0] + '/edit'">
+              href="" tal:attributes="href python:row[1] + '/edit'">
               Edit
             </a>
           </td>
-          <tal:block tal:repeat="column python:row[1:]">
+          <tal:block tal:repeat="column python:row[2:]">
             <td tal:content="column"/>
           </tal:block>
         </tr>

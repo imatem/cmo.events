@@ -89,7 +89,8 @@ class WorkshopView(WidgetsView):
         participants['headers'] = headers
 
         for item in items:
-            row = [item.absolute_url()]
+            row = [item.UID()]
+            row.append(item.absolute_url())
             # row = []
 
             obj = item
@@ -184,32 +185,33 @@ class WorkshopView(WidgetsView):
 
             for row in rows:
                 orderrow = []
-                orderrow.append(row[0])  # this column is the url
-                orderrow.append(row[1])
+                orderrow.append(row[0])  # this column is the UID
+                orderrow.append(row[1])  # this column is the url
                 orderrow.append(row[2])
                 orderrow.append(row[3])
-                orderrow.append(row[7])
-                orderrow.append(row[11])
                 orderrow.append(row[4])
+                orderrow.append(row[8])
+                orderrow.append(row[12])
+                orderrow.append(row[5])
+                orderrow.append(row[17])
+                orderrow.append(row[23])
+                orderrow.append(row[25])
+                orderrow.append(row[14])
+                orderrow.append(row[15])
+                orderrow.append(row[19])
+                orderrow.append(row[26])
+                orderrow.append(row[20])
+                orderrow.append(row[7])
+                orderrow.append(row[6])
+                orderrow.append(row[13])
                 orderrow.append(row[16])
+                orderrow.append(row[9])
+                orderrow.append(row[11])
+                orderrow.append(row[10])
+                orderrow.append(row[18])
+                orderrow.append(row[21])
                 orderrow.append(row[22])
                 orderrow.append(row[24])
-                orderrow.append(row[13])
-                orderrow.append(row[14])
-                orderrow.append(row[18])
-                orderrow.append(row[25])
-                orderrow.append(row[19])
-                orderrow.append(row[6])
-                orderrow.append(row[5])
-                orderrow.append(row[12])
-                orderrow.append(row[15])
-                orderrow.append(row[8])
-                orderrow.append(row[10])
-                orderrow.append(row[9])
-                orderrow.append(row[17])
-                orderrow.append(row[20])
-                orderrow.append(row[21])
-                orderrow.append(row[23])
                 orderparticipants['rows'].append(orderrow)
 
         except Exception:
@@ -225,16 +227,15 @@ class WorkshopView(WidgetsView):
         aux_applications = [
             (
                 app,
-                hotels.get(app[8], 4),
-                idnormalizer.normalize(app[8]),
-                idnormalizer.normalize(app[2]),
-                idnormalizer.normalize(app[3])
+                hotels.get(app[9], 4),
+                idnormalizer.normalize(app[9]),
+                idnormalizer.normalize(app[3]),
+                idnormalizer.normalize(app[4])
             ) for app in orderparticipants['rows']
         ]
         aux_sorted = sorted(aux_applications, key=itemgetter(1, 2, 3, 4))
         orows = [i[0] for i in aux_sorted]
         orderparticipants['rows'] = orows
-
         return orderparticipants
 
     def handle_update_participants(self):
