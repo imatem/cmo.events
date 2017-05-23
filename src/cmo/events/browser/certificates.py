@@ -210,6 +210,9 @@ class CertificatesView(BrowserView):
         mainTex = u'% !TEX encoding = UTF-8 Unicode\n'
         mainTex += HEADER_LATEX_TEMPLATE
 
+        images = [item for item in getSite().values() if item.portal_type == 'Image']
+        image = images[0]
+
         for participant in participants:
 
             mainTex += BODY_LATEX_TEMPLATE % (
@@ -226,6 +229,12 @@ class CertificatesView(BrowserView):
             file_os = open(file_path, 'wb')
             file_os.write(fileTex)
             file_os.close()
+
+            image_path = os.path.join(tempdir, 'header.png')
+            image_os = open(image_path, 'wb')
+            image_os.write(image.image.data)
+            image_os.close()
+
             os.system("cd {0}; pdflatex -interaction=nonstopmode {1}".format(tempdir, file_path))
         except:
             pass
