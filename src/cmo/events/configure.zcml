@@ -37,4 +37,14 @@
       factory=".setuphandlers.HiddenProfiles"
       name="cmo.events-hiddenprofiles" />
 
+  <utility
+      component=".vocabularies.ShowFields"
+      name="cmo.events.showfields"
+      />
+
+  <utility
+      component=".vocabularies.CertificatesTemplates"
+      name="cmo.events.certificatestemplates"
+      />
+
 </configure>
