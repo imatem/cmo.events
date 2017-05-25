@@ -121,10 +121,10 @@ class ICertificate(Interface):
     """Certificate
     """
 
-    title = schema.TextLine(
-        title=_(u'label_cmo_certificate_name', u'Certificate Name'),
-        required=False,
-    )
+    # title = schema.TextLine(
+    #     title=_(u'label_cmo_certificate_name', u'Certificate Name'),
+    #     required=False,
+    # )
 
     # show_fields = schema.List(
     #     title=_(
@@ -137,14 +137,14 @@ class ICertificate(Interface):
     #     required=False,
     # )
 
-    # ctemplate = schema.Choice(
-    #     title=_(
-    #         u'label_cmo_certificate_ctemplate',
-    #         default=u'Template'
-    #     ),
-    #     vocabulary='cmo.events.certificatestemplates',
-    #     required=False,
-    # )
+    ctemplate = schema.Choice(
+        title=_(
+            u'label_cmo_certificate_ctemplate',
+            default=u'Template'
+        ),
+        vocabulary='cmo.events.certificatestemplates',
+        required=False,
+    )
 
     subheader = schema.Text(
         title=_(u'label_cmo_certificate_subheader', u'Sub Header'),
@@ -164,8 +164,8 @@ class ICertificate(Interface):
         default=u'$Participant:$Person:firstname $Participant:$Person:lastname'
     )
 
-    description = schema.Text(
-        title=_(u'label_cmo_certificate_description', u'Description'),
+    bodydescription = schema.Text(
+        title=_(u'label_cmo_certificate_description', u'Body Description'),
         required=False,
         default=u'has attended the "$Workshop:title" workshop, held from $fancyDate, at Hotel Los Laureles, Oaxaca, Oax. Mexico.'
     )
