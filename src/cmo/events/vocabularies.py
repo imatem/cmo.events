@@ -8,17 +8,6 @@ from zope.schema.vocabulary import SimpleVocabulary
 
 
 @provider(IVocabularyFactory)
-def ShowFields(context):
-
-    active_terms = []
-
-    for brain in ['Participant: Firstname', 'Participant: Lastname', 'Workshop: Title', ]:
-        active_terms.append(SimpleVocabulary.createTerm(
-            brain.replace(': ', '-'), brain.split(':')[1].strip(), brain))
-
-    return SimpleVocabulary(active_terms)
-
-@provider(IVocabularyFactory)
 def CertificatesTemplates(context):
 
     templates = []
