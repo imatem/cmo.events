@@ -8,6 +8,8 @@ import os
 import tempfile
 import shutil
 import re
+import unicodecsv as csv
+from Products.CMFPlone.utils import safe_unicode
 
 
 HEADER_LATEX_TEMPLATE = r"""
@@ -120,8 +122,12 @@ class CertificatesView(BrowserView):
                 # \subheader, \preamble, \participantdata,
                 # \bodydescription, \signaturename,
                 # \signatureappointment, \signatureinst
+
         if apps:
-            pdfdata = self.createPDF(apps)
+            pdfdata = self.createPDF2(apps)
+            if not pdfdata:
+                return self.index()
+
             pdffile = pdfdata[0]
             new_file = open(pdffile, "rb")
             self.request.response.setHeader(
@@ -141,6 +147,7 @@ class CertificatesView(BrowserView):
             except:
                 pass
             return new_file
+
         return self.index()
 
     @property
@@ -262,7 +269,7 @@ class CertificatesView(BrowserView):
             if '$fancyDate' in value:
                 newvalue = value.replace('$fancyDate', self.fancyDate(workshop_fields['start_date'], workshop_fields['end_date']))
 
-            newListvalues.append(newvalue)
+            newListvalues.append(safe_unicode(newvalue))
 
         return ' '.join(newListvalues)
 
@@ -346,6 +353,75 @@ class CertificatesView(BrowserView):
             os.system("cd {0}; pdflatex -interaction=nonstopmode {1}".format(tempdir, file_path))
         except:
             pass
+
+        pdfname = file_path.replace('.tex', '.pdf')
+        # os.system("cp {0} ~/Desktop".format(pdfname))
+        return (pdfname, tempdir)
+
+
+    def createPDF2(self, participants):
+
+        # \subheader, \preamble, \participantdata,
+        # \bodydescription, \signaturename,
+        # \signatureappointment, \signatureinst
+
+        certificates = [item for item in self.context.values() if item.portal_type == 'Certificate']
+        if not certificates:
+            return None
+
+        certificate = certificates[0]
+        uidtemplate = certificate.ctemplate
+        brain = self.catalog.searchResults(portal_type='Folder', UID=uidtemplate,)
+
+        if brain:
+            folder_template = brain[0].getObject()
+            images = [item for item in folder_template.values() if item.portal_type == 'Image']
+            texfiles = [item for item in folder_template.values() if item.portal_type == 'File']
+        try:
+            image = images[0]
+            texfile = texfiles[0]
+        except Exception:
+            return None
+
+        try:
+            tempdir = tempfile.mkdtemp()
+        except Exception:
+            return None
+
+        #  For cvs file
+        headers = [
+            'subheader',
+            'preamble',
+            'participantdata',
+            'bodydescription',
+            'signaturename',
+            'signatureappointment',
+            'signatureinst',
+        ]
+
+        try:
+            cvsfile_path = os.path.join(tempdir, 'namelist.csv')
+            csvfile = open(cvsfile_path, 'wb')
+            writer = csv.writer(csvfile, delimiter=",")
+            writer.writerow(headers)
+            for participant in participants:
+                writer.writerow([s.encode('utf8') for s in participant])
+
+            csvfile.close()
+
+            image_path = os.path.join(tempdir, 'header.png')
+            image_os = open(image_path, 'wb')
+            image_os.write(image.image.data)
+            image_os.close()
+
+            title_plan = "%s.tex" % ('certificates')
+            file_path = os.path.join(tempdir, title_plan)
+            file_os = open(file_path, 'wb')
+            file_os.write(texfile.file.data)
+            file_os.close()
+            os.system("cd {0}; pdflatex -interaction=nonstopmode {1}".format(tempdir, file_path))
+        except Exception:
+            return None
 
         pdfname = file_path.replace('.tex', '.pdf')
         # os.system("cp {0} ~/Desktop".format(pdfname))

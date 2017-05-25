@@ -43,6 +43,7 @@ setup(
         'setuptools',
         'z3c.jbot',
         'plone.app.dexterity',
+        'unicodecsv',
     ],
     extras_require={
         'test': [
