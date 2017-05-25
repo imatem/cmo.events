@@ -2,10 +2,12 @@
 from Products.CMFCore.utils import getToolByName
 from Products.Five import BrowserView
 from zope.component.hooks import getSite
+from collections import OrderedDict
 
 import os
 import tempfile
 import shutil
+import re
 
 
 HEADER_LATEX_TEMPLATE = r"""
@@ -53,9 +55,9 @@ BODY_LATEX_TEMPLATE = r"""
         \begin{minipage}[c]{6.2in}
             {\centering
             {\onehalfspacing
-            {\Large\bfseries{CERTIFICATE}\par}
+            {\Large\bfseries{%s}\par}
             \vskip2em
-            {This is to certify that:\par}
+            {%s\par}
             \vskip2em
             {\large{\selectfont{\sc{\bfseries %s}}\par}}
             \par}}
@@ -67,7 +69,7 @@ BODY_LATEX_TEMPLATE = r"""
         {
         \noindent{
         \doublespacing
-        has attended the ``%s'' workshop, held from %s, at %s, Oaxaca, Oax. Mexico.
+        %s
         }}
         
         \noindent
@@ -78,7 +80,7 @@ BODY_LATEX_TEMPLATE = r"""
         \begin{minipage}[l]{2.25in}
             {\centering
             {\onehalfspacing
-                  \sigskip \signature{}{Dr. Jos\'e Seade Kuri\\ Director\\ Casa Matem\'atica Oaxaca }
+                  \sigskip \signature{}{%s\\ %s\\ %s}
             \par}}
         \end{minipage}
         \hspace*{\fill}
@@ -113,23 +115,11 @@ class CertificatesView(BrowserView):
                     uids = [self.request.form['certificatebox']]
                 else:
                     uids = self.request.form['certificatebox']
-                for uid in uids:
-                    brain = self.catalog.searchResults(
-                        portal_type='Participant',
-                        UID=uid,
-                    )
-                    if brain:
-                        obj = brain[0].getObject()
-                        firstname = obj.firstname
-                        lastname = obj.lastname
-                        name = firstname + ' ' + lastname
-                        workshop = self.context.Title() + u''
-                        start_date = self.context.start_date
-                        end_date = self.context.end_date
-                        textdate = self.fancyDate(start_date, end_date) + u''
-                        place = u'at Los Laureles'
-                        apps.append([name, workshop, textdate, place])
-                        # \name=Name,\workshop=Workshop, \edate=Date, \place=place}
+
+                apps = self.dataforcertificate(uids)
+                # \subheader, \preamble, \participantdata,
+                # \bodydescription, \signaturename,
+                # \signatureappointment, \signatureinst
         if apps:
             pdfdata = self.createPDF(apps)
             pdffile = pdfdata[0]
@@ -165,29 +155,143 @@ class CertificatesView(BrowserView):
             participants = myview.participantsWithcolumnOrder()
         return participants
 
+
+
+    def dataforcertificate(self, uids):
+        certificates = [item for item in self.context.values() if item.portal_type == 'Certificate']
+        if not certificates:
+            return []
+
+        certificate = certificates[0]
+
+        # this dictionary is static, change for generic
+        fields_certificate = OrderedDict()
+        fields_certificate['subheader'] = certificate.subheader
+        fields_certificate['preamble'] = certificate.preamble
+        fields_certificate['participantdata'] = certificate.participantdata
+        fields_certificate['bodydescription'] = certificate.bodydescription
+        fields_certificate['signaturename'] = certificate.signaturename
+        fields_certificate['signatureappointment'] = certificate.signatureappointment
+        fields_certificate['signatureinst'] = certificate.signatureinst
+
+        apps = []
+        for uid in uids:
+            brain = self.catalog.searchResults(
+                portal_type='Participant',
+                UID=uid,
+            )
+            if brain:
+                obj = brain[0].getObject()
+                lparticipant = []
+                for cvalue in fields_certificate.values():
+                    lparticipant.append(self.parseValue(obj, cvalue))
+
+                apps.append(lparticipant)
+
+        return apps
+
+
+    def parseValue(self, obj, field_value):
+
+        listvalues = field_value.split(' ')
+        regex = re.compile('[^a-zA-Z]')
+
+        participant_fields = {}
+
+        exclude_names = []
+        # exclude_names = (
+        #     'IBasic.title',
+        #     'IBasic.description',
+        #     'description',
+        #     'title'
+        # )
+
+        viewitem = obj.unrestrictedTraverse('view')
+        viewitem.update()
+
+        default_widgets = viewitem.widgets.values()
+
+        for widget in default_widgets:
+            if widget.__name__ not in exclude_names:
+                participant_fields[widget.name.split('.')[-1]] = widget.value
+
+        groups = viewitem.groups
+        for group in groups:
+            widgetsg = group.widgets.values()
+            for widget in widgetsg:
+                participant_fields[widget.name.split('.')[-1]] = widget.value
+
+        # for workshops
+        workshop_fields = {}
+        viewitem = self.context.unrestrictedTraverse('view')
+        viewitem.update()
+
+        default_widgets = viewitem.widgets.values()
+
+        for widget in default_widgets:
+            if widget.__name__ not in exclude_names:
+                workshop_fields[widget.name.split('.')[-1]] = widget.value
+
+        groups = viewitem.groups
+        for group in groups:
+            widgetsg = group.widgets.values()
+            for widget in widgetsg:
+                workshop_fields[widget.name.split('.')[-1]] = widget.value
+
+        newListvalues = []
+
+        for value in listvalues:
+            newvalue = value
+
+            if '$Participant:' in value:
+                vsplit = value.split(':')
+                if len(vsplit) >= 2:
+                    vfield = vsplit[1]
+                    field_name = regex.sub('', vfield)
+                    if field_name in participant_fields.keys():
+                        newvalue = value.replace('$Participant:' + field_name, participant_fields[field_name])
+
+            if '$Workshop:' in value:
+                vsplit = value.split(':')
+                if len(vsplit) >= 2:
+                    vfield = vsplit[1]
+                    field_name = regex.sub('', vfield)
+                    if field_name in workshop_fields.keys():
+                        newvalue = value.replace('$Workshop:' + field_name, workshop_fields[field_name])
+
+            if '$fancyDate' in value:
+                newvalue = value.replace('$fancyDate', self.fancyDate(workshop_fields['start_date'], workshop_fields['end_date']))
+
+            newListvalues.append(newvalue)
+
+        return ' '.join(newListvalues)
+
     def fancyDate(self, start_date, end_date):
 
         month_name = {
-            '1': 'January',
-            '2': 'February',
-            '3': 'March',
-            '4': 'April',
-            '5': 'May',
-            '6': 'June',
-            '7': 'July',
-            '8': 'Augost',
-            '9': 'September',
+            '01': 'January',
+            '02': 'February',
+            '03': 'March',
+            '04': 'April',
+            '05': 'May',
+            '06': 'June',
+            '07': 'July',
+            '08': 'Augost',
+            '09': 'September',
             '10': 'Octover',
             '11': 'November',
             '12': 'December',
         }
 
-        syear = str(start_date.year)
-        smonth = str(start_date.month)
-        sday = str(start_date.day)
-        eyear = str(end_date.year)
-        emonth = str(end_date.month)
-        eday = str(end_date.day)
+        sdate = start_date.split('-')
+        edate = end_date.split('-')
+
+        syear = sdate[0]
+        smonth = sdate[1]
+        sday = sdate[2]
+        eyear = edate[0]
+        emonth = edate[1]
+        eday = edate[2]
 
         textdate = u''
         if syear == eyear:
@@ -216,10 +320,14 @@ class CertificatesView(BrowserView):
         for participant in participants:
 
             mainTex += BODY_LATEX_TEMPLATE % (
-                participant[0],
-                participant[1],
-                participant[2],
-                participant[3],
+                participant[0],  # 'subheader'
+                participant[1],  # 'preamble'
+                participant[2],  # 'participantdata'
+                participant[3],  # 'bodydescription'
+                participant[4],  # 'signaturename'
+                participant[5],  # 'signatureappointment'
+                participant[6],  # 'signatureinst'
+
             )
         mainTex += FOOTER_LATEX_TEMPLATE
         try:
