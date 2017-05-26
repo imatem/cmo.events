@@ -121,10 +121,11 @@ class ICertificate(Interface):
     """Certificate
     """
 
-    # title = schema.TextLine(
-    #     title=_(u'label_cmo_certificate_name', u'Certificate Name'),
-    #     required=False,
-    # )
+    title = schema.TextLine(
+        title=_(u'label_cmo_certificate_name', u'Certificate Name'),
+        required=False,
+        default=u'Certificate'
+    )
 
     # show_fields = schema.List(
     #     title=_(
