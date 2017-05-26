@@ -17,6 +17,35 @@
       .documentDescription{
         display:none !important;
       }
+
+      a.button {
+        -webkit-appearance: button;
+        -moz-appearance: button;
+        color: #4d4d4d;
+        background-color: #e5e5e5;
+        border-color: #b2b2b2;
+
+        display: inline-block;
+        margin-bottom: 0;
+        font-weight: 700;
+        text-align: center;
+        text-shadow: 0 1px rgba(0, 0, 0, 0.25);
+        vertical-align: middle;
+        cursor: pointer;
+        background-image: none;
+        border: 1px solid transparent;
+        white-space: nowrap;
+        padding: 6px 12px;
+        font-size: 14px;
+        line-height: 1.42857143;
+        border-radius: 2px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+
+        
+      }
     </style>
   </metal:css>
 
@@ -87,6 +116,7 @@
             type="submit"
             value="Update"
       />
+      <a href="certificates" class="button">Generate Certificates and Badges</a>
     </form>
     <hr/>
   </div>
