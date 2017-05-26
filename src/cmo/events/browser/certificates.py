@@ -523,7 +523,7 @@ class CertificatesView(BrowserView):
 
             csvfile.close()
 
-            image_path = os.path.join(tempdir, 'header.png')
+            image_path = os.path.join(tempdir, 'header-small.png')
             image_os = open(image_path, 'wb')
             image_os.write(image.image.data)
             image_os.close()
@@ -533,7 +533,7 @@ class CertificatesView(BrowserView):
             file_os = open(file_path, 'wb')
             file_os.write(texfile.file.data)
             file_os.close()
-            os.system("cd {0}; pdflatex -interaction=nonstopmode {1}".format(tempdir, file_path))
+            os.system("cd {0}; xelatex -interaction=nonstopmode {1}".format(tempdir, file_path))
         except Exception:
             return None
 
