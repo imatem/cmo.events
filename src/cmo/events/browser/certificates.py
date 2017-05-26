@@ -110,31 +110,48 @@ class CertificatesView(BrowserView):
 
     def __call__(self):
         apps = []
+        uids = []
         self.form = self.request.form
+
         if self.request.form:
-            if 'certificatebox' in self.request.form.keys():
+            formkeys = self.request.form.keys()
+            if 'certificatebox' in formkeys:
                 if type(self.request.form['certificatebox']) == str:
                     uids = [self.request.form['certificatebox']]
                 else:
                     uids = self.request.form['certificatebox']
 
-                apps = self.dataforcertificate(uids)
-                # \subheader, \preamble, \participantdata,
-                # \bodydescription, \signaturename,
-                # \signatureappointment, \signatureinst
-
-        if apps:
-            pdfdata = self.createPDF2(apps)
-            if not pdfdata:
+            if not uids:
                 return self.index()
+
+            if 'getcertificates' in formkeys:
+                apps = self.dataforcertificate(uids)
+
+                if apps:
+                    pdfdata = self.createPDF2(apps)
+                    if not pdfdata:
+                        return self.index()
+                    self.request.response.setHeader(
+                        "Content-Disposition",
+                        "attachment; filename=%s.pdf" %
+                        'certificates'
+                    )
+
+            if 'getbadges' in formkeys:
+                apps = self.dataforbadge(uids)
+                if apps:
+                    pdfdata = self.createBadgePDF(apps)
+                    if not pdfdata:
+                        return self.index()
+                    self.request.response.setHeader(
+                        "Content-Disposition",
+                        "attachment; filename=%s.pdf" %
+                        'badges'
+                    )
 
             pdffile = pdfdata[0]
             new_file = open(pdffile, "rb")
-            self.request.response.setHeader(
-                "Content-Disposition",
-                "attachment; filename=%s.pdf" %
-                'certificates'
-            )
+            
             self.request.response.setHeader("Content-Type", "application/pdf")
             # self.request.response.setHeader("Content-Length", len(pdfcontent))
             # self.request.response.setHeader('Last-Modified', DateTime.rfc822(DateTime()))
@@ -193,6 +210,24 @@ class CertificatesView(BrowserView):
                 for cvalue in fields_certificate.values():
                     lparticipant.append(self.parseValue(obj, cvalue))
 
+                apps.append(lparticipant)
+
+        return apps
+
+    def dataforbadge(self, uids):
+        apps = []
+        for uid in uids:
+            brain = self.catalog.searchResults(
+                portal_type='Participant',
+                UID=uid,
+            )
+            if brain:
+                obj = brain[0].getObject()
+                lparticipant = []
+                name = obj.firstname + ' ' + obj.lastname
+                lparticipant.append(name)
+                lparticipant.append(obj.affiliation)
+                lparticipant.append(self.context.title)
                 apps.append(lparticipant)
 
         return apps
@@ -421,6 +456,69 @@ class CertificatesView(BrowserView):
             file_os.close()
             os.system("cd {0}; pdflatex -interaction=nonstopmode {1}".format(tempdir, file_path))
             # applied double pdflatex for draft
+            os.system("cd {0}; pdflatex -interaction=nonstopmode {1}".format(tempdir, file_path))
+        except Exception:
+            return None
+
+        pdfname = file_path.replace('.tex', '.pdf')
+        # os.system("cp {0} ~/Desktop".format(pdfname))
+        return (pdfname, tempdir)
+
+
+    def createBadgePDF(self, participants):
+
+        # \name, \affiliation, \workshop,
+        
+        certificates = [item for item in self.context.values() if item.portal_type == 'Certificate']
+        if not certificates:
+            return None
+
+        certificate = certificates[0]
+        uidtemplate = certificate.ctemplate
+        brain = self.catalog.searchResults(portal_type='Folder', UID=uidtemplate,)
+
+        if brain:
+            folder_template = brain[0].getObject()
+            images = [item for item in folder_template.values() if item.portal_type == 'Image']
+            texfiles = [item for item in folder_template.values() if item.portal_type == 'File']
+        try:
+            image = images[1]
+            texfile = texfiles[1]
+        except Exception:
+            return None
+
+        try:
+            tempdir = tempfile.mkdtemp()
+        except Exception:
+            return None
+
+        #  For cvs file
+        headers = [
+            'Name',
+            'Affiliation',
+            'Workshop',
+        ]
+
+        try:
+            cvsfile_path = os.path.join(tempdir, 'names.csv')
+            csvfile = open(cvsfile_path, 'wb')
+            writer = csv.writer(csvfile, delimiter=",")
+            writer.writerow(headers)
+            for participant in participants:
+                writer.writerow([s.encode('utf8') for s in participant])
+
+            csvfile.close()
+
+            image_path = os.path.join(tempdir, 'header.png')
+            image_os = open(image_path, 'wb')
+            image_os.write(image.image.data)
+            image_os.close()
+
+            title_plan = "%s.tex" % ('badges')
+            file_path = os.path.join(tempdir, title_plan)
+            file_os = open(file_path, 'wb')
+            file_os.write(texfile.file.data)
+            file_os.close()
             os.system("cd {0}; pdflatex -interaction=nonstopmode {1}".format(tempdir, file_path))
         except Exception:
             return None

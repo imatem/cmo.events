@@ -7,6 +7,34 @@
   <head>
     <metal:css fill-slot="style_slot" tal:define="resources_url string:${context/portal_url}/++resource++wcfc">
       <link href="++resource++wcfc/bootstrap/bootstrap-fixed.css" tal:attributes="href string:${resources_url}/bootstrap/bootstrap-fixed.css" rel="stylesheet" type="text/css"/>
+      <style type="text/css">
+        a.button {
+        -webkit-appearance: button;
+        -moz-appearance: button;
+        color: #4d4d4d;
+        background-color: #e5e5e5;
+        border-color: #b2b2b2;
+
+        display: inline-block;
+        margin-bottom: 0;
+        font-weight: 700;
+        text-align: center;
+        text-shadow: 0 1px rgba(0, 0, 0, 0.25);
+        vertical-align: middle;
+        cursor: pointer;
+        background-image: none;
+        border: 1px solid transparent;
+        white-space: nowrap;
+        padding: 6px 12px;
+        font-size: 14px;
+        line-height: 1.42857143;
+        border-radius: 2px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none; 
+      }
+      </style>
     </metal:css>
 
     <metal:block fill-slot="top_slot"
@@ -23,13 +51,20 @@
   <body>
     <div id="content-core" metal:fill-slot="main">
       <div class="fc" tal:define="participants view/participants">
-        <form
-              method="POST">
-            <input class="btn btn-small searchPage searchButton allowMultiSubmit"
-                  type="submit"
-                  value="Get Selected"
-            />
+        <form method="POST">
+          <!-- <a href="certificates" class="button">Return to Worhshop</a> -->
+          <input class="btn btn-small searchPage searchButton allowMultiSubmit"
+                type="submit"
+                name="getcertificates"
+                value="Get Certificate(s)"
+          />
 
+          <input class="btn btn-small"
+                type="submit"
+                name="getbadges"
+                value="Get Badge(s)"
+          />
+            
           <hr/>
         <tal:block tal:condition="participants">
           <table class="listing">
