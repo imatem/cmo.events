@@ -10,6 +10,11 @@ import shutil
 import re
 import unicodecsv as csv
 from Products.CMFPlone.utils import safe_unicode
+from plone import api
+from smtplib import SMTPException, SMTPRecipientsRefused
+from Products.CMFCore.interfaces import ISiteRoot
+from zope.component import getUtility
+
 
 
 HEADER_LATEX_TEMPLATE = r"""
@@ -122,6 +127,10 @@ class CertificatesView(BrowserView):
                     uids = self.request.form['certificatebox']
 
             if not uids:
+                return self.index()
+
+            if 'email_option' in formkeys:
+                self.send_email(uids)
                 return self.index()
 
             if 'getcertificates' in formkeys:
@@ -526,3 +535,57 @@ class CertificatesView(BrowserView):
         pdfname = file_path.replace('.tex', '.pdf')
         # os.system("cp {0} ~/Desktop".format(pdfname))
         return (pdfname, tempdir)
+
+    def send_email(self, participants):
+        for uiditem in participants:
+            brains = self.catalog.searchResults(UID=uiditem)
+            if brains:
+                obj = brains[0].getObject()
+                pdfdata = self.createPDF2(uiditem)
+                participant_email = obj.email
+                participant_name = obj.firstname + ' ' + obj.lastname
+                workshop_title = self.context.title
+
+                if not pdfdata:
+                    continue
+
+                pdffile = pdfdata[0]
+                # new_file = open(pdffile, "rb")
+                # # new_file.write(new_file.read())
+                # new_file.close()
+
+                encoding = getUtility(ISiteRoot).getProperty('email_charset', 'utf-8')
+
+                mail_host = api.portal.get_tool(name='MailHost')
+                m_to = participant_email
+                m_from = 'foo@im.unam.mx'
+                subject = 'Certificate'
+
+                mail_text = 'Dear %s:' % (participant_name)
+                mail_text += u'\n'
+                mail_text += workshop_title
+                mail_text += u'\n'
+                mail_text += u'  Sincerily, \n'
+                mail_text += u'Responsible'
+                
+
+                # attachment = MIMEBase('application', 'pdf')
+                # attachment.set_payload(file)
+                # Encoders.encode_base64(attachment)
+                # attachment.add_header('Content-Disposition', 'attachment', filename='file.pdf')
+                # msg.attach(body)
+                # msg.attach(attachment)
+
+            try:
+                mail_host.send(mail_text, m_to, m_from, subject=subject, charset=encoding, immediate=True)
+            except SMTPRecipientsRefused:
+                # Don't disclose email address on failure
+                # raise SMTPRecipientsRefused('Recipient address rejected by server')
+                pass
+
+            try:
+                shutil.rmtree(pdfdata[1])  # remove tempdir
+            except:
+                pass
+
+        return True

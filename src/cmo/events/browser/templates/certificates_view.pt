@@ -64,6 +64,12 @@
                 name="getbadges"
                 value="Get Badge(s)"
           />
+
+          <input class="btn btn-small"
+                type="submit"
+                name="email_option"
+                value="Send email"
+          />
             
           <hr/>
         <tal:block tal:condition="participants">
