@@ -14,6 +14,11 @@ from plone import api
 from smtplib import SMTPException, SMTPRecipientsRefused
 from Products.CMFCore.interfaces import ISiteRoot
 from zope.component import getUtility
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.application import MIMEApplication
+
+
 
 
 
@@ -549,39 +554,27 @@ class CertificatesView(BrowserView):
                 if not pdfdata:
                     continue
 
-                pdffile = pdfdata[0]
-                # new_file = open(pdffile, "rb")
-                # # new_file.write(new_file.read())
-                # new_file.close()
-
-                encoding = getUtility(ISiteRoot).getProperty('email_charset', 'utf-8')
-
-                mail_host = api.portal.get_tool(name='MailHost')
-                m_to = participant_email
-                m_from = 'foo@im.unam.mx'
-                subject = 'Certificate'
-
                 mail_text = 'Dear %s:' % (participant_name)
                 mail_text += u'\n'
                 mail_text += workshop_title
                 mail_text += u'\n'
                 mail_text += u'  Sincerily, \n'
                 mail_text += u'Responsible'
-                
 
-                # attachment = MIMEBase('application', 'pdf')
-                # attachment.set_payload(file)
-                # Encoders.encode_base64(attachment)
-                # attachment.add_header('Content-Disposition', 'attachment', filename='file.pdf')
-                # msg.attach(body)
-                # msg.attach(attachment)
+                pdffile = open(pdfdata[0], "rb")
+                pdf = MIMEApplication(pdffile.read(), _subtype='pdf')
+                text = MIMEText(mail_text, _charset='UTF-8')
 
-            try:
-                mail_host.send(mail_text, m_to, m_from, subject=subject, charset=encoding, immediate=True)
-            except SMTPRecipientsRefused:
-                # Don't disclose email address on failure
-                # raise SMTPRecipientsRefused('Recipient address rejected by server')
-                pass
+                message = MIMEMultipart(_subparts=(text, pdf))
+
+                api.portal.send_email(
+                    recipient=participant_email,
+                    sender='foo@im.unam.mx',
+                    subject='Certificate',
+                    body=message,
+                )
+
+                pdffile.close()
 
             try:
                 shutil.rmtree(pdfdata[1])  # remove tempdir
