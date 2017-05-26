@@ -161,7 +161,7 @@ class ICertificate(Interface):
     participantdata = schema.Text(
         title=_(u'label_cmo_certificate_participantdata', u'Participant Data'),
         required=False,
-        default=u'$Participant:$Person:firstname $Participant:$Person:lastname'
+        default=u'$Participant:firstname $Participant:lastname'
     )
 
     bodydescription = schema.Text(
