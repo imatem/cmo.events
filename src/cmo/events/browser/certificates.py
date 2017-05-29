@@ -588,3 +588,17 @@ class CertificatesView(BrowserView):
                 pass
 
         return True
+
+    def tableContentInformation(self):
+
+        information = OrderedDict()
+        viewitem = self.context.unrestrictedTraverse('view')
+        viewitem.update()
+        default_widgets = viewitem.widgets.values()
+        exclude_names = ['press_release', 'description']
+
+        for widget in default_widgets:
+            if widget.__name__ not in exclude_names:
+                information[widget.label] = widget.value
+        return information
+
