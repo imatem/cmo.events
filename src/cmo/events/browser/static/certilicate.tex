@@ -9,10 +9,11 @@
 %
 \usepackage{datatool} %% for mail merging, and read file
 %
-\def\signature#1#2{\parbox[b]{1in}{\smash{#1}\vskip12pt}
-\hfill \parbox[t]{2.2in}{\shortstack{\vrule width 2.2in height 0.4pt\\\small#2}}}
-\def\sigskip{\vskip0.4in plus 0.1in}
-        \def\beginskip{\vskip0.5875in plus 0.1in}
+\def\signature#1#2{\parbox[b]{0.1in}{\smash{#1}}
+\hfill \parbox[t]{3.2in}{\shortstack{\vrule width 3.2in height 0.0pt\\ \small#2}}}
+\def\sigskip{\vskip1.5in plus 0.1in}
+%\def\beginskip{\vskip0.5875in plus 0.1in}
+
 % % some colors
 \definecolor{cline}{RGB}{229,220,224}
 %
@@ -63,10 +64,11 @@
         \vfill
         %
         \hspace*{\fill}
-        \begin{minipage}[l]{2.25in}
+        \begin{minipage}[c]{3.25in}
             {\centering%
             {\onehalfspacing
-                  \sigskip \signature{}{\signaturename \\ \signatureappointment \\ \signatureinst}
+                  \sigskip
+                  \signature{\includegraphics{sg} }{\signaturename \\ \signatureappointment \\ \signatureinst}
             \par}}
         \end{minipage}%
         \hspace*{\fill}
