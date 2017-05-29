@@ -53,14 +53,19 @@ class WorkshopView(WidgetsView):
 
         return super(WorkshopView, self).__call__()
 
-    def participants(self):
+    def participants(self, attendance=[]):
 
         allvaluesitems = self.context.values()
 
         items = []
+        # attendance
         for itemv in allvaluesitems:
             if itemv.portal_type == 'Participant':
-                items.append(itemv)
+                if attendance:
+                    if itemv.attendance in attendance:
+                        items.append(itemv)
+                else:
+                    items.append(itemv)
 
         participants = {
             'headers': [],
@@ -122,9 +127,9 @@ class WorkshopView(WidgetsView):
             participants['rows'].append(row)
         return participants
 
-    def participantsWithcolumnOrder(self):
+    def participantsWithcolumnOrder(self, attendance=[]):
 
-        participants = self.participants()
+        participants = self.participants(attendance)
         orderparticipants = {
             'headers': [],
             'rows': []
