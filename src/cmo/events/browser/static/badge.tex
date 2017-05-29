@@ -1,30 +1,32 @@
-\documentclass[letterpaper,12pt]{scrartcl}
-\usepackage[letterpaper,left=1cm,right=1cm,top=1cm,bottom=1cm,heightrounded]{geometry}
+\documentclass[letterpaper,12pt]{letter}
+\usepackage[letterpaper,left=1cm,right=1cm,top=0.5cm,bottom=0.5cm,heightrounded]{geometry}
 \usepackage{fullpage}
 %\usepackage{csvtools}
 \usepackage{datatool}
 \usepackage{graphicx}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-
+\usepackage{fontspec}
+\setmainfont{Arial}
 
 %encabzado, nombre, institucion, evento
 
 % Customize here to adapt badge size.
 % Beware that larger badges may exceed printing limits.
-\newcommand{\badgewidth}{97mm}
+\newcommand{\badgewidth}{100mm}
 \newcommand{\badgeheight}{64mm}
 \setlength{\oddsidemargin}{-15mm}
 \setlength{\fboxsep}{0mm}
 
-%\topmargin = -75pt
+\topmargin = -65pt
+\textheight = 780pt %563pt
 
 
 % Customize here for background image name & size.
 % Ideally, logo should cover the whole badge.
 % If you don't have a background image, simply declare \imgcmd empty.
-\newcommand\imgcmd{\includegraphics[width=\badgewidth,height=\badgeheight]{header}}
-%\newcommand\imgcmd{}
+%\newcommand\imgcmd{\includegraphics[width=\badgewidth,height=\badgeheight]{header-small}}
+\newcommand\imgcmd{}
 
 \pagestyle{empty}
 \begin{document}
@@ -38,14 +40,14 @@
         %\rlap{\raisebox{-\badgeheight}{\hspace{2.6mm}\imgcmd}}        
         \begin{minipage}[t][\badgeheight]{\badgewidth}
             % Customize here for text layout
-            \vspace{3mm}
+            \vspace{5mm}
             \sffamily \centering
-            \includegraphics[\badgewidth]{header}
-            \\[2mm]
-            \fontsize{24}{30}\selectfont\textbf{\name}
+            \includegraphics[\badgewidth]{header-small}
+            \\[10mm]
+            {\fontsize{18}\selectfont\textbf{\name}}
             \\
             \vspace{2mm}
-            \large\itshape\affiliation
+            {\fontsize{11}\itshape\affiliation}
             \vspace{6mm}
             \\
        \workshop
