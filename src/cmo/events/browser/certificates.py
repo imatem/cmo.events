@@ -429,6 +429,7 @@ class CertificatesView(BrowserView):
         try:
             image = images[0]
             texfile = texfiles[0]
+            imagesg = images[-1]
         except Exception:
             return None
 
@@ -462,6 +463,11 @@ class CertificatesView(BrowserView):
             image_os = open(image_path, 'wb')
             image_os.write(image.image.data)
             image_os.close()
+
+            image_path = os.path.join(tempdir, 'sg.png')
+            image_sg = open(image_path, 'wb')
+            image_sg.write(imagesg.image.data)
+            image_sg.close()
 
             title_plan = "%s.tex" % ('certificates')
             file_path = os.path.join(tempdir, title_plan)
