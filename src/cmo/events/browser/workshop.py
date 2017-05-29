@@ -55,7 +55,12 @@ class WorkshopView(WidgetsView):
 
     def participants(self):
 
-        items = self.context.values()
+        allvaluesitems = self.context.values()
+
+        items = []
+        for itemv in allvaluesitems:
+            if itemv.portal_type == 'Participant':
+                items.append(itemv)
 
         participants = {
             'headers': [],
