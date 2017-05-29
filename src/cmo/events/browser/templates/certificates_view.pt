@@ -94,6 +94,7 @@
 
 
         <tal:block tal:condition="participants">
+          <h2> Participants Confirmed </h2>
           <table class="listing">
             <thead>
               <tr>

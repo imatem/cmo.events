@@ -190,7 +190,8 @@ class CertificatesView(BrowserView):
         participants = {}
         if self.context.portal_type == 'Workshop':
             myview = self.context.unrestrictedTraverse('view')
-            participants = myview.participantsWithcolumnOrder()
+            participants = myview.participantsWithcolumnOrder(['Confirmed',])
+
         return participants
 
 
