@@ -10,7 +10,7 @@
 \usepackage{datatool} %% for mail merging, and read file
 %
 \def\signature#1#2{\parbox[b]{0.1in}{\smash{#1}}
-\hfill \parbox[t]{3.2in}{\shortstack{\vrule width 3.2in height 0.0pt\\ \small#2}}}
+\hfill \parbox[t]{3.2in}{\shortstack{\vrule width 3.2in height 0.0pt\\#2}}}
 \def\sigskip{\vskip1.5in plus 0.1in}
 %\def\beginskip{\vskip0.5875in plus 0.1in}
 
@@ -68,7 +68,7 @@
             {\centering%
             {\onehalfspacing
                   \sigskip
-                  \signature{\includegraphics{sg} }{\signaturename \\ \signatureappointment \\ \signatureinst}
+                  \signature{\includegraphics[width=3in]{sg} }{\signaturename \\ \signatureappointment \\ \signatureinst}
             \par}}
         \end{minipage}%
         \hspace*{\fill}
