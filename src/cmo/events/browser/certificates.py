@@ -582,6 +582,7 @@ class CertificatesView(BrowserView):
                 )
 
                 pdffile.close()
+                obj.certificatesended = u'Yes'
 
             try:
                 shutil.rmtree(pdfdata[1])  # remove tempdir
