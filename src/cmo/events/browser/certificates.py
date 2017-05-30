@@ -562,11 +562,13 @@ class CertificatesView(BrowserView):
                     continue
 
                 mail_text = 'Dear %s:' % (participant_name)
-                mail_text += u'\n'
+                mail_text += u'\n Please find attached your certificate of '
                 mail_text += workshop_title
-                mail_text += u'\n'
-                mail_text += u'  Sincerily, \n'
-                mail_text += u'Responsible'
+                mail_text += u'.\n'
+                mail_text += u' Best regards, \n'
+                mail_text += u'Claudia Arias Cao Romero \n'
+                mail_text += u'Conference Program Coordinator \n'
+                mail_text += u'Casa Matemática Oaxaca \n'
 
                 pdffile = open(pdfdata[0], "rb")
                 pdf = MIMEApplication(pdffile.read(), _subtype='pdf')
@@ -576,7 +578,7 @@ class CertificatesView(BrowserView):
 
                 api.portal.send_email(
                     recipient=participant_email,
-                    sender='foo@im.unam.mx',
+                    sender='c.arias@im.unam.mx',
                     subject='Certificate',
                     body=message,
                 )
