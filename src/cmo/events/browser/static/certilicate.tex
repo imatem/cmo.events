@@ -1,0 +1,83 @@
+\documentclass[16pt]{scrartcl}
+\usepackage[letterpaper,left=1.5cm,right=1.5cm,top=2cm,bottom=2cm,heightrounded]{geometry}
+\usepackage{pdflscape}
+\usepackage{setspace}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{background}
+%\SetBgContents{} %comment for draft
+%
+\usepackage{datatool} %% for mail merging, and read file
+%
+\def\signature#1#2{\parbox[b]{0.1in}{\smash{#1}}
+\hfill \parbox[t]{3.2in}{\shortstack{\vrule width 3.2in height 0.0pt\\ \small#2}}}
+\def\sigskip{\vskip1.5in plus 0.1in}
+%\def\beginskip{\vskip0.5875in plus 0.1in}
+
+% % some colors
+\definecolor{cline}{RGB}{229,220,224}
+%
+\begin{document}
+
+\sloppy
+\DTLloaddb{names}{namelist.csv}
+%
+\begin{landscape}
+    %\pagecolor{Bisque}
+    %
+    \pagestyle{empty}
+    \DTLforeach{names}{%   %%% these constitute running content
+        \subheader=subheader, \preamble=preamble, \participantdata=participantdata, \bodydescription=bodydescription, \signaturename=signaturename, \signatureappointment=signatureappointment, \signatureinst=signatureinst}{%
+%       \name=Name,\workshop=Workshop, \edate=Date, \place=place}{%
+        \linespread{2}\selectfont
+        \begin{minipage}[c]{9in}
+            \includegraphics[width=1\textwidth]{header}
+            \vskip-2.3em
+            \noindent\makebox[\linewidth]{\color{cline}{{\rule{\textwidth}{2.5pt}}}}
+        \end{minipage}%
+        \vskip3em
+        %
+        \noindent
+        \hspace*{\fill}
+        \begin{minipage}[c]{6.2in}
+            {\centering%
+            {\onehalfspacing
+            {\Large\bfseries{ \subheader }\par}
+            \vskip2em
+            {\preamble\par}
+            \vskip2em
+            {\large{\selectfont{\sc{\bfseries \participantdata}}\par}}
+            \par}}
+        \end{minipage}%
+        \hspace*{\fill}
+        %
+        \vskip3em
+        %
+        {%
+        \noindent{
+        \doublespacing  
+        \bodydescription
+        }}
+        
+        \noindent
+        {\singlespacing
+        \vfill
+        %
+        \hspace*{\fill}
+        \begin{minipage}[c]{3.25in}
+            {\centering%
+            {\onehalfspacing
+                  \sigskip
+                  \signature{\includegraphics{sg} }{\signaturename \\ \signatureappointment \\ \signatureinst}
+            \par}}
+        \end{minipage}%
+        \hspace*{\fill}
+%       %
+        \vfill
+        \pagebreak
+        }
+    }
+%
+\end{landscape}
+%
+\end{document}

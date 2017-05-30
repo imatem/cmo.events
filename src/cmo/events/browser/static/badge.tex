@@ -1,0 +1,58 @@
+\documentclass[letterpaper,12pt]{letter}
+\usepackage[letterpaper,left=1cm,right=1cm,top=0.5cm,bottom=0.5cm,heightrounded]{geometry}
+\usepackage{fullpage}
+%\usepackage{csvtools}
+\usepackage{datatool}
+\usepackage{graphicx}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{fontspec}
+\setmainfont{Arial}
+
+%encabzado, nombre, institucion, evento
+
+% Customize here to adapt badge size.
+% Beware that larger badges may exceed printing limits.
+\newcommand{\badgewidth}{100mm}
+\newcommand{\badgeheight}{64mm}
+\setlength{\oddsidemargin}{-15mm}
+\setlength{\fboxsep}{0mm}
+
+\topmargin = -65pt
+\textheight = 780pt %563pt
+
+
+% Customize here for background image name & size.
+% Ideally, logo should cover the whole badge.
+% If you don't have a background image, simply declare \imgcmd empty.
+%\newcommand\imgcmd{\includegraphics[width=\badgewidth,height=\badgeheight]{header-small}}
+\newcommand\imgcmd{}
+
+\pagestyle{empty}
+\begin{document}
+%\applyCSVfile{names.csv}{%
+\DTLloaddb{names}{names.csv}%
+
+\DTLforeach{names}{%   %%% these constitute running content
+        \name=Name,\affiliation=Affiliation,\workshop=Workshop}{%
+    \noindent\framebox[\badgewidth]{%
+        % Don't know why the badge is not contained in the framebox. The hspace fixes it.
+        %\rlap{\raisebox{-\badgeheight}{\hspace{2.6mm}\imgcmd}}        
+        \begin{minipage}[t][\badgeheight]{\badgewidth}
+            % Customize here for text layout
+            \vspace{5mm}
+            \sffamily \centering
+            \includegraphics[\badgewidth]{header-small}
+            \\[10mm]
+            {\fontsize{18}\selectfont\textbf{\name}}
+            \\
+            \vspace{2mm}
+            {\fontsize{11}\itshape\affiliation}
+            \vspace{6mm}
+            \\
+       \workshop
+        \end{minipage}
+    }
+%    \hspace*{-100mm}
+}
+\end{document}

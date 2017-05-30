@@ -10,6 +10,7 @@ from plone.i18n.normalizer import idnormalizer
 from requests.exceptions import ConnectionError
 from requests.exceptions import HTTPError
 from zope.component import getUtility
+from collections import OrderedDict
 
 import logging
 import requests
@@ -53,9 +54,19 @@ class WorkshopView(WidgetsView):
 
         return super(WorkshopView, self).__call__()
 
-    def participants(self):
+    def participants(self, attendance=[]):
 
-        items = self.context.values()
+        allvaluesitems = self.context.values()
+
+        items = []
+        # attendance
+        for itemv in allvaluesitems:
+            if itemv.portal_type == 'Participant':
+                if attendance:
+                    if itemv.attendance in attendance:
+                        items.append(itemv)
+                else:
+                    items.append(itemv)
 
         participants = {
             'headers': [],
@@ -68,6 +79,8 @@ class WorkshopView(WidgetsView):
             'IBasic.description',
             'description',
             'title'
+            # 'IMembership.certificatesended',
+            # 'IMembership.certificaterequested',
         )
         headers = []
         obj = items[0]
@@ -89,7 +102,8 @@ class WorkshopView(WidgetsView):
         participants['headers'] = headers
 
         for item in items:
-            row = [item.absolute_url()]
+            row = [item.UID()]
+            row.append(item.absolute_url())
             # row = []
 
             obj = item
@@ -107,109 +121,78 @@ class WorkshopView(WidgetsView):
             for group in groups:
                 widgetsg = group.widgets.values()
                 for widget in widgetsg:
-                    if widget.__name__ == 'IAcommodation.hotel':
+                    if widget.__name__ in['IAcommodation.hotel', 'IMembership.certificatesended', 'IMembership.certificaterequested']:
                         row.append(','.join(widget.value))
                     # row.append(getattr(item, widget.name, None))
+                    # elif widget.__name__ not in exclude_names:
+                        # row.append(widget.value)
                     else:
                         row.append(widget.value)
 
             participants['rows'].append(row)
         return participants
 
-    def participantsWithcolumnOrder(self):
+    def positionlabelfield(self, labelfield):
+        orderfields = OrderedDict()
+        orderfields[u'label_cmo_workshop'] = 0
+        orderfields[u'label_cmo_firstname'] = 1
+        orderfields[u'label_cmo_lastname'] = 2
+        orderfields[u'label_cmo_email'] = 5
+        orderfields[u'label_cmo_country'] = 15
+        orderfields[u'label_cmo_gender'] = 14
+        orderfields[u'label_cmo_affiliation'] = 3
+        orderfields[u'label_cmo_grade'] = 18
+        orderfields[u'label_cmo_webpage'] = 20
+        orderfields[u'label_cmo_phone'] = 19
+        orderfields[u'label_cmo_year'] = 4
+        orderfields[u'label_cmo_status'] = 16
+        orderfields[u'label_cmo_arrival'] = 9
+        orderfields[u'label_cmo_departure'] = 10
+        orderfields[u'label_cmo_attendance'] = 17
+        orderfields[u'label_cmo_role'] = 6
+        orderfields[u'label_cmo_replied'] = 21
+        orderfields[u'label_cmo_hasguest'] = 11
+        orderfields[u'label_cmo_specialInfo'] = 13
+        orderfields[u'label_cmo_offsite'] = 22
+        orderfields[u'label_cmo_eventNotes'] = 23
+        orderfields[u'label_cmo_certificatesended'] = 25
+        orderfields[u'label_cmo_certificaterequested'] = 26
+        orderfields[u'label_cmo_hotel'] = 7
+        orderfields[u'label_cmo_visa'] = 24
+        orderfields[u'label_cmo_externalHotel'] = 8
+        orderfields[u'label_cmo_nameGuest'] = 12
 
-        participants = self.participants()
+        return orderfields.get(labelfield, -1)
+
+    def participantsWithcolumnOrder(self, attendance=[]):
+
+        participants = self.participants(attendance)
         orderparticipants = {
             'headers': [],
             'rows': []
         }
 
-        # order = {
-        #     u'label_cmo_workshop': 0,  # 0
-        #     u'label_cmo_firstname': 1,  # 1
-        #     u'label_cmo_lastname': 2,  # 2
-        #     u'label_cmo_affiliation': 3,  # 6
-        #     u'label_cmo_year': 4,  # 10
-        #     u'label_cmo_email': 5,  # 3
-        #     u'label_cmo_role': 6,  # 15
-        #     u'label_cmo_hotel': 7,  # 21
-        #     u'label_cmo_externalHotel': 8,  # 23
-        #     u'label_cmo_arrival': 9,  # 12
-        #     u'label_cmo_departure': 10,  # 13
-        #     u'label_cmo_hasguest': 11,  # 17
-        #     u'label_cmo_nameGuest': 12,  # 24
-        #     u'label_cmo_specialInfo': 13,  # 18
-        #     u'label_cmo_gender': 14,  # 5
-        #     u'label_cmo_country': 15,  # 4
-        #     u'label_cmo_status': 16,  # 11
-        #     u'label_cmo_attendance': 17,  # 14
-        #     u'label_cmo_grade': 18,  # 7
-        #     u'label_cmo_phone': 19,  # 9
-        #     u'label_cmo_webpage': 20,  # 8
-        #     u'label_cmo_replied': 21,  # 16
-        #     u'label_cmo_offsite': 22,  # 19
-        #     u'label_cmo_eventNotes': 23,  # 20
-        #     u'label_cmo_visa': 24,  # 22
-        # }
-
         try:
             headers = participants['headers']
-            orderparticipants['headers'].append(headers[0])
-            orderparticipants['headers'].append(headers[1])
-            orderparticipants['headers'].append(headers[2])
-            orderparticipants['headers'].append(headers[6])
-            orderparticipants['headers'].append(headers[10])
-            orderparticipants['headers'].append(headers[3])
-            orderparticipants['headers'].append(headers[15])
-            orderparticipants['headers'].append(headers[21])
-            orderparticipants['headers'].append(headers[23])
-            orderparticipants['headers'].append(headers[12])
-            orderparticipants['headers'].append(headers[13])
-            orderparticipants['headers'].append(headers[17])
-            orderparticipants['headers'].append(headers[24])
-            orderparticipants['headers'].append(headers[18])
-            orderparticipants['headers'].append(headers[5])
-            orderparticipants['headers'].append(headers[4])
-            orderparticipants['headers'].append(headers[11])
-            orderparticipants['headers'].append(headers[14])
-            orderparticipants['headers'].append(headers[7])
-            orderparticipants['headers'].append(headers[9])
-            orderparticipants['headers'].append(headers[8])
-            orderparticipants['headers'].append(headers[16])
-            orderparticipants['headers'].append(headers[19])
-            orderparticipants['headers'].append(headers[20])
-            orderparticipants['headers'].append(headers[22])
+            for j in range(0, len(headers)):
+                orderparticipants['headers'].append('')
+
+            for header in headers:
+                orderparticipants['headers'][self.positionlabelfield(header)] = header
 
             rows = participants['rows']
-
             for row in rows:
                 orderrow = []
-                orderrow.append(row[0])  # this column is the url
-                orderrow.append(row[1])
-                orderrow.append(row[2])
-                orderrow.append(row[3])
-                orderrow.append(row[7])
-                orderrow.append(row[11])
-                orderrow.append(row[4])
-                orderrow.append(row[16])
-                orderrow.append(row[22])
-                orderrow.append(row[24])
-                orderrow.append(row[13])
-                orderrow.append(row[14])
-                orderrow.append(row[18])
-                orderrow.append(row[25])
-                orderrow.append(row[19])
-                orderrow.append(row[6])
-                orderrow.append(row[5])
-                orderrow.append(row[12])
-                orderrow.append(row[15])
-                orderrow.append(row[8])
-                orderrow.append(row[10])
-                orderrow.append(row[9])
-                orderrow.append(row[17])
-                orderrow.append(row[20])
-                orderrow.append(row[21])
-                orderrow.append(row[23])
+                for j in range(0, len(row)):
+                    orderrow.append('')
+
+                orderrow[0] = row[0]  # this column is the UID
+                orderrow[1] = row[1]  # this column is the url
+                k = 2
+                for header in headers:
+                    position = self.positionlabelfield(header)
+                    orderrow[position + 2] = row[k]
+                    k += 1
                 orderparticipants['rows'].append(orderrow)
 
         except Exception:
@@ -225,16 +208,15 @@ class WorkshopView(WidgetsView):
         aux_applications = [
             (
                 app,
-                hotels.get(app[8], 4),
-                idnormalizer.normalize(app[8]),
-                idnormalizer.normalize(app[2]),
-                idnormalizer.normalize(app[3])
+                hotels.get(app[9], 4),
+                idnormalizer.normalize(app[9]),
+                idnormalizer.normalize(app[3]),
+                idnormalizer.normalize(app[4])
             ) for app in orderparticipants['rows']
         ]
         aux_sorted = sorted(aux_applications, key=itemgetter(1, 2, 3, 4))
         orows = [i[0] for i in aux_sorted]
         orderparticipants['rows'] = orows
-
         return orderparticipants
 
     def handle_update_participants(self):

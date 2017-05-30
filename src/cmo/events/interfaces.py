@@ -8,6 +8,11 @@ from zope.interface import Invalid
 from zope.interface import invariant
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
 
+from zope.interface import provider
+from zope.schema.interfaces import IContextAwareDefaultFactory
+from Products.CMFCore.utils import getToolByName
+from zope.component.hooks import getSite
+
 
 class ICmoEventsLayer(IDefaultBrowserLayer):
     """Marker interface that defines a browser layer."""
@@ -110,3 +115,76 @@ class IWorkshop(Interface):
                 _('error_end_must_be_after_start_date',
                   default=u'End date must be after start date.')
             )
+
+
+class ICertificate(Interface):
+    """Certificate
+    """
+
+    title = schema.TextLine(
+        title=_(u'label_cmo_certificate_name', u'Certificate Name'),
+        required=False,
+        default=u'Certificate'
+    )
+
+    # show_fields = schema.List(
+    #     title=_(
+    #         u'label_cmo_certificate_showfields',
+    #         default=u'Show Fields'
+    #     ),
+    #     value_type=schema.Choice(
+    #         vocabulary='cmo.events.showfields',
+    #     ),
+    #     required=False,
+    # )
+
+    ctemplate = schema.Choice(
+        title=_(
+            u'label_cmo_certificate_ctemplate',
+            default=u'Template'
+        ),
+        vocabulary='cmo.events.certificatestemplates',
+        required=False,
+    )
+
+    subheader = schema.Text(
+        title=_(u'label_cmo_certificate_subheader', u'Sub Header'),
+        required=False,
+        default=u'CERTIFICATE',
+    )
+
+    preamble = schema.Text(
+        title=_(u'label_cmo_certificate_preamble', u'Preamble'),
+        required=False,
+        default=u'This is to cetify that:'
+    )
+
+    participantdata = schema.Text(
+        title=_(u'label_cmo_certificate_participantdata', u'Participant Data'),
+        required=False,
+        default=u'$Participant:firstname $Participant:lastname'
+    )
+
+    bodydescription = schema.Text(
+        title=_(u'label_cmo_certificate_description', u'Body Description'),
+        required=False,
+        default=u'has attended the "$Workshop:title" workshop, held from $fancyDate, at Hotel Los Laureles, Oaxaca, Oax. Mexico.'
+    )
+
+    signaturename = schema.Text(
+        title=_(u'label_cmo_certificate_signaturename', u'Signature Name'),
+        required=False,
+        default=u'Dr. José Antonio Seade Kuri'
+    )
+
+    signatureappointment = schema.Text(
+        title=_(u'label_cmo_certificate_appointment', u'Signature Appointment'),
+        required=False,
+        default=u'Director'
+    )
+
+    signatureinst = schema.Text(
+        title=_(u'label_cmo_certificate_signatureinst', u'Signature Institution'),
+        required=False,
+        default=u'Casa Matemática Oaxaca'
+    )

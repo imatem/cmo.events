@@ -44,6 +44,16 @@
         template="templates/participant_view.pt"
         />
 
+  <!-- views for certificates -->
+
+  <browser:page
+        name="certificates"
+        for="*"
+        class=".certificates.CertificatesView"
+        permission="zope2.View"
+        template="templates/certificates_view.pt"
+        />
+
   <browser:page
     name="cmo-controlpanel"
     for="Products.CMFPlone.interfaces.IPloneSiteRoot"

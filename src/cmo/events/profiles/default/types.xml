@@ -3,4 +3,5 @@
     <object name="Event" meta_type="Dexterity FTI"/>
     <object name="Participant" meta_type="Dexterity FTI"/>
     <object name="Workshop" meta_type="Dexterity FTI"/>
+    <object name="Certificate" meta_type="Dexterity FTI"/>
 </object>
