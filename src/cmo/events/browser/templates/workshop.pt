@@ -116,7 +116,7 @@
             type="submit"
             value="Update"
       />
-      <a href="certificates" class="button">Generate Certificates and Badges</a>
+      <a href="" class="button" tal:attributes="href view/urltocertificates">Generate Certificates and Badges</a>
     </form>
     <hr/>
   </div>

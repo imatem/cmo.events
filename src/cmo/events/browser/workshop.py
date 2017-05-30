@@ -45,6 +45,9 @@ class WorkshopView(WidgetsView):
     def additionalSchemata(self):
         return getAdditionalSchemata(context=self.context)
 
+    def urltocertificates(self):
+        return self.context.absolute_url() + '/certificates'
+
     def __call__(self):
         # utility function to add resource to rendered page
         # add_resource_on_request(self.request, 'tablecmo')
