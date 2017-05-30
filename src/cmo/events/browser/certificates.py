@@ -185,6 +185,9 @@ class CertificatesView(BrowserView):
     def catalog(self):
         return getToolByName(getSite(), 'portal_catalog')
 
+    def urltoworkshop(self):
+        return self.context.absolute_url()
+
     def participants(self):
 
         participants = {}

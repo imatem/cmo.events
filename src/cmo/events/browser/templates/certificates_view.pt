@@ -71,7 +71,7 @@
 
 
         <form method="POST">
-          <!-- <a href="certificates" class="button">Return to Worhshop</a> -->
+          <a href="#" class="button" tal:attributes="href view/urltoworkshop">Return to Worhshop</a>
           <input class="btn btn-small searchPage searchButton allowMultiSubmit"
                 type="submit"
                 name="getcertificates"
