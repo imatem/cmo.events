@@ -30,6 +30,8 @@ class IMembership(model.Schema):
             'special_info',
             'off_site',
             'event_notes',
+            'certificatesended',
+            'certificaterequested',
         ]
     )
 
@@ -100,6 +102,26 @@ class IMembership(model.Schema):
             default=u'Event Notes'
         ),
         required=False,
+    )
+
+    certificatesended = schema.Choice(
+        title=_(
+            u'label_cmo_certificatesended',
+            default=u'Certificate Sended'
+        ),
+        values=[u'Yes', u'No'],
+        required=True,
+        default=u'No'
+    )
+
+    certificaterequested = schema.Choice(
+        title=_(
+            u'label_cmo_certificaterequested',
+            default=u'Certificate Requested'
+        ),
+        values=[u'Yes', u'No'],
+        required=True,
+        default=u'No'
     )
 
 
