@@ -201,7 +201,7 @@ class CertificatesView(BrowserView):
 
 
     def dataforcertificate(self, uids):
-        certificates = [item for item in self.context.values() if item.portal_type == 'Certificate']
+        certificates = self.getInstanceCertificate()
         if not certificates:
             return []
 
@@ -412,6 +412,14 @@ class CertificatesView(BrowserView):
         # os.system("cp {0} ~/Desktop".format(pdfname))
         return (pdfname, tempdir)
 
+    def getInstanceCertificate(self):
+
+        certificates = [item for item in self.context.values() if item.portal_type == 'Certificate']
+        if not certificates:
+            bcertificates = self.catalog.searchResults(portal_type='Certificate',)
+            if bcertificates:
+                certificates = [bcertificates[0].getObject()]
+        return certificates
 
     def createPDF2(self, participants):
 
@@ -419,7 +427,7 @@ class CertificatesView(BrowserView):
         # \bodydescription, \signaturename,
         # \signatureappointment, \signatureinst
 
-        certificates = [item for item in self.context.values() if item.portal_type == 'Certificate']
+        certificates = self.getInstanceCertificate()
         if not certificates:
             return None
 
@@ -494,7 +502,7 @@ class CertificatesView(BrowserView):
 
         # \name, \affiliation, \workshop,
         
-        certificates = [item for item in self.context.values() if item.portal_type == 'Certificate']
+        certificates = self.getInstanceCertificate()
         if not certificates:
             return None
 
