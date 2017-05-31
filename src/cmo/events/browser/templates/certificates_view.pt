@@ -41,11 +41,28 @@
                 disable_column_one python:request.set('disable_plone.leftcolumn',1);
                 disable_column_two python:request.set('disable_plone.rightcolumn',1);"
     />
-    <metal:js fill-slot="javascript_head_slot">
-    </metal:js>
   </head>
   <body>
+
     <div id="content-core" metal:fill-slot="main">
+      <script type="text/javascript">
+      $(document).ready(function() {
+        // Listen for click on toggle checkbox
+        $('#select-all').click(function(event) {
+          if(this.checked) {
+            // Iterate each checkbox
+            $('#checkrows :checkbox').each(function() {
+              this.checked = true;
+            });
+          }
+          else{
+            $('#checkrows :checkbox').each(function() {
+              this.checked = false;
+            });
+          }
+        });
+      });
+    </script>
       <div class="fc" tal:define="participants view/participants">
 
         <table class="listing" tal:define="contentInformation view/tableContentInformation">
@@ -94,14 +111,14 @@
           <table class="listing">
             <thead>
               <tr>
-                <th></th>
+                <th><input type="checkbox" name="select-all" id="select-all" /></th>
                 <th>Number</th>
                 <tal:block tal:repeat="header python:participants['headers'][1:4]">
                   <th i18n:translate="" tal:content="header"/>
                 </tal:block>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="checkrows">
               <tr tal:repeat="row participants/rows">
                 <td>
                     <input type="checkbox" name="certificatebox" tal:attributes="value python:row[0]">
