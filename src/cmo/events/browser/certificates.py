@@ -579,13 +579,16 @@ class CertificatesView(BrowserView):
                 text = MIMEText(mail_text, _charset='UTF-8')
 
                 message = MIMEMultipart(_subparts=(text, pdf))
-
-                api.portal.send_email(
-                    recipient=participant_email,
-                    sender='c.arias@im.unam.mx',
-                    subject='Certificate',
-                    body=message,
-                )
+                try:
+                    api.portal.send_email(
+                        recipient=participant_email,
+                        sender='c.arias@im.unam.mx',
+                        subject='Certificate',
+                        body=message,
+                    )
+                except SMTPRecipientsRefused:
+                    # Don't disclose email address on failure
+                    raise SMTPRecipientsRefused('Recipient address rejected by server')
 
                 pdffile.close()
                 obj.certificatesended = u'Yes'
