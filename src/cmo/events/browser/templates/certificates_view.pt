@@ -5,8 +5,7 @@
   metal:use-macro="context/main_template/macros/master"
   i18n:domain="cmo.events">
   <head>
-    <metal:css fill-slot="style_slot" tal:define="resources_url string:${context/portal_url}/++resource++wcfc">
-      <link href="++resource++wcfc/bootstrap/bootstrap-fixed.css" tal:attributes="href string:${resources_url}/bootstrap/bootstrap-fixed.css" rel="stylesheet" type="text/css"/>
+    <metal:css fill-slot="style_slot">
       <style type="text/css">
         a.button {
         -webkit-appearance: button;
@@ -42,10 +41,7 @@
                 disable_column_one python:request.set('disable_plone.leftcolumn',1);
                 disable_column_two python:request.set('disable_plone.rightcolumn',1);"
     />
-    <metal:js fill-slot="javascript_head_slot" tal:define="resources_url string:${context/portal_url}/++resource++wcfc">
-      <script type="text/javascript" src="++resource++wcfc/bootstrap/bootstrap.min.js"
-                tal:attributes="src string:${resources_url}/bootstrap/bootstrap.min.js">
-      </script>
+    <metal:js fill-slot="javascript_head_slot">
     </metal:js>
   </head>
   <body>
