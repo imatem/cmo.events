@@ -242,7 +242,8 @@ class WorkshopView(WidgetsView):
         """Update participants list
         """
         for item in json_data:
-            if item['Person']['email'] not in self.context:
+            # if item['Person']['email'] not in self.context:
+            if item['Person']['email'] not in [participant.email for participant in self.context.values() if participant.portal_type == 'Participant']:
                 kargs = dict(item['Person'])
                 kargs.update(item['Membership'])
                 kargs['workshop'] = item['Workshop']
