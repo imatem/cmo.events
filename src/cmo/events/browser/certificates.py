@@ -553,10 +553,11 @@ class CertificatesView(BrowserView):
 
     def send_email(self, participants):
         for uiditem in participants:
-            brains = self.catalog.searchResults(UID=uiditem)
+            brains = self.catalog.searchResults(portal_type='Participant', UID=uiditem,)
             if brains:
                 obj = brains[0].getObject()
-                pdfdata = self.createPDF2(uiditem)
+                data = self.dataforcertificate([uiditem])
+                pdfdata = self.createPDF2(data)
                 participant_email = obj.email
                 participant_name = obj.firstname + ' ' + obj.lastname
                 workshop_title = self.context.title
@@ -567,7 +568,7 @@ class CertificatesView(BrowserView):
                 mail_text = 'Dear %s:' % (participant_name)
                 mail_text += u'\n Please find attached your certificate of '
                 mail_text += workshop_title
-                mail_text += u'.\n'
+                mail_text += u'.\n\n\n\n'
                 mail_text += u' Best regards, \n'
                 mail_text += u'Claudia Arias Cao Romero \n'
                 mail_text += u'Conference Program Coordinator \n'
