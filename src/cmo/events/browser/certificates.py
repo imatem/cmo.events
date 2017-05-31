@@ -136,7 +136,7 @@ class CertificatesView(BrowserView):
 
             if 'email_option' in formkeys:
                 self.send_email(uids)
-                api.portal.show_message((u'Sended!'), self.request, type=u'info')
+                # api.portal.show_message((u'Sended!'), self.request, type=u'info')
                 return self.index()
 
             if 'getcertificates' in formkeys:
