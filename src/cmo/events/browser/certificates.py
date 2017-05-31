@@ -577,8 +577,9 @@ class CertificatesView(BrowserView):
                 pdffile = open(pdfdata[0], "rb")
                 pdf = MIMEApplication(pdffile.read(), _subtype='pdf')
                 text = MIMEText(mail_text, _charset='UTF-8')
-
+                text['Bcc'] = 'c.arias@im.unam.mx'
                 message = MIMEMultipart(_subparts=(text, pdf))
+
                 try:
                     api.portal.send_email(
                         recipient=participant_email,
