@@ -11,7 +11,9 @@ from z3c.form import field
 from z3c.form import form
 from zope import schema
 
+import datetime
 import logging
+import mysql.connector
 import requests
 
 logger = logging.getLogger('Plone')
@@ -34,13 +36,13 @@ class IMyForm(model.Schema):
 
     year = schema.Choice(
         title=_(u'Year'),
-        values=[u'2015', u'2016', u'2017', u'2018'],
+        values=[u'2015', u'2016', u'2017', u'2018', u'2019'],
         required=False,
     )
 
 
 class UpdateWorkshopsForm(form.Form):
-    """Update workshops from Birs DB."""
+    """Update workshops list."""
 
     fields = field.Fields(IMyForm)
     ignoreContext = True
@@ -49,7 +51,7 @@ class UpdateWorkshopsForm(form.Form):
 
     @button.buttonAndHandler(_(u'Update Workshops'))
     def handle_update_workshops(self, action):
-        """Update workshops list
+        """Update workshops list from Birds API
         """
         logger.info('Updating Workshops')
         data, errors = self.extractData()
@@ -64,6 +66,39 @@ class UpdateWorkshopsForm(form.Form):
         else:
             self.update_workshops(year, req.json())
             api.portal.show_message(_(u'Updated!'), self.request, type=u'info')
+        logger.info('Done.')
+
+    @button.buttonAndHandler(_(u'Update Workshops from DB'))
+    def handle_update_workshops_db(self, action):
+        """Update workshops list from CIMAT db
+        """
+        logger.info('Updating Workshops')
+        data, errors = self.extractData()
+        year = data['year']
+
+        config = {
+            'user': 'user',
+            'password': 'some_password',
+            'host': '192.168.33.1',
+            'database': 'databasename'
+        }
+
+        try:
+            cnx = mysql.connector.connect(**config)
+        except mysql.connector.Error as err:
+            api.portal.show_message(err, self.request, type=u'error')
+        else:
+            cursor = cnx.cursor()
+            query = ("SELECT codigo, nombre FROM eventos WHERE fechaIni BETWEEN %s AND %s")
+            event_start = datetime.date(int(year), 1, 1)
+            event_end = datetime.date(int(year), 12, 31)
+            cursor.execute(query, (event_start, event_end))
+            # self.update_workshops(year, json_data)
+            for (codigo, nombre) in cursor:
+                print("{}, {}".format(codigo, nombre))
+            api.portal.show_message(_(u'Updated!'), self.request, type=u'info')
+            cursor.close()
+            cnx.close()
         logger.info('Done.')
 
     def update_workshops(self, year, json_data):
