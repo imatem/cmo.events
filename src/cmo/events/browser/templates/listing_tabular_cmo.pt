@@ -44,8 +44,8 @@
             </td>
             <!-- <td tal:content="workshop/Title"/> -->
             <td tal:content="workshop/short_name"/>
-            <td tal:content="workshop/start_date"/>
-            <td tal:content="workshop/end_date"/>
+            <td tal:content="python:str(workshop.start_date).replace('00:00:00', '')"/>
+            <td tal:content="python:str(workshop.end_date).replace('00:00:00', '')"/>
             <td tal:content="workshop/event_type"/>
             <td tal:content="workshop/max_participants"/>
           </tr>
