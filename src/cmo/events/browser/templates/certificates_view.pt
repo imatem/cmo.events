@@ -111,9 +111,9 @@
           <table class="listing">
             <thead>
               <tr>
-                <th><input type="checkbox" name="select-all" id="select-all" /></th>
+                <th><input type="checkbox" name="select-all" id="select-all" /> All</th>
                 <th>Number</th>
-                <tal:block tal:repeat="header python:participants['headers'][1:4]">
+                <tal:block tal:repeat="header python:participants['headers'][1:4] + [participants['headers'][-1]] + [participants['headers'][-2]]">
                   <th i18n:translate="" tal:content="header"/>
                 </tal:block>
               </tr>
@@ -124,7 +124,7 @@
                     <input type="checkbox" name="certificatebox" tal:attributes="value python:row[0]">
                 </td>
                 <td tal:content="repeat/row/number">number</td>
-                <tal:block tal:repeat="column python:row[3:6]">
+                <tal:block tal:repeat="column python:row[3:6] + [row[-1]] + [row[-2]]">
                   <td tal:content="column"/>
                 </tal:block>
               </tr>
