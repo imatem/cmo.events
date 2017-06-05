@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from cmo.events import _
-from datetime import datetime
 from plone import api
 from plone.supermodel import model
 from requests.exceptions import ConnectionError
@@ -89,13 +88,13 @@ class UpdateWorkshopsForm(form.Form):
             api.portal.show_message(err, self.request, type=u'error')
         else:
             cursor = cnx.cursor()
-            query = ("SELECT codigo, nombre FROM eventos WHERE fechaIni BETWEEN %s AND %s")
+            query = ("SELECT * FROM eventos WHERE fechaIni BETWEEN %s AND %s ORDER BY codigo")
             event_start = datetime.date(int(year), 1, 1)
             event_end = datetime.date(int(year), 12, 31)
             cursor.execute(query, (event_start, event_end))
             # self.update_workshops(year, json_data)
-            for (codigo, nombre) in cursor:
-                print("{}, {}".format(codigo, nombre))
+            for row in cursor:
+                print(row[1])
             api.portal.show_message(_(u'Updated!'), self.request, type=u'info')
             cursor.close()
             cnx.close()
