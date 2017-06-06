@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from datetime import date
+from datetime import datetime
 from cmo.events import _
 from plone import api
 from plone.supermodel import model
@@ -10,7 +12,6 @@ from z3c.form import field
 from z3c.form import form
 from zope import schema
 
-import datetime
 import logging
 import mysql.connector
 import requests
@@ -50,7 +51,7 @@ class UpdateWorkshopsForm(form.Form):
 
     @button.buttonAndHandler(_(u'Update Workshops'))
     def handle_update_workshops(self, action):
-        """Update workshops list from Birds API
+        """Update workshops list from Birs API
         """
         logger.info('Updating Workshops')
         data, errors = self.extractData()
@@ -87,17 +88,17 @@ class UpdateWorkshopsForm(form.Form):
         except mysql.connector.Error as err:
             api.portal.show_message(err, self.request, type=u'error')
         else:
-            cursor = cnx.cursor()
+            # A MySQLCursorDict cursor returns each row as a dictionary
+            cursor = cnx.cursor(dictionary=True)
             query = ("SELECT * FROM eventos WHERE fechaIni BETWEEN %s AND %s ORDER BY codigo")
-            event_start = datetime.date(int(year), 1, 1)
-            event_end = datetime.date(int(year), 12, 31)
+            event_start = date(int(year), 1, 1)
+            event_end = date(int(year), 12, 31)
             cursor.execute(query, (event_start, event_end))
-            # self.update_workshops(year, json_data)
-            for row in cursor:
-                print(row[1])
-            api.portal.show_message(_(u'Updated!'), self.request, type=u'info')
+            json_data = [self.workshop_to_birs(row) for row in cursor]
+            self.update_workshops(year, json_data)
             cursor.close()
             cnx.close()
+            api.portal.show_message(_(u'Updated!'), self.request, type=u'info')
         logger.info('Done.')
 
     def update_workshops(self, year, json_data):
@@ -120,6 +121,22 @@ class UpdateWorkshopsForm(form.Form):
                     title=item['name'],
                     container=folder,
                     **item)
+
+    def workshop_to_birs(self, data):
+        """Returns a workshop with birs api format
+        """
+        workshop = {
+            'code': data['codigo'],
+            'name': data['nombre'],
+            'short_name': data['nombreCorto'],
+            'start_date': str(data['fechaIni']),
+            'end_date': str(data['fechaFin']),
+            'event_type': data['tipoEvento'],
+            'max_participants': data['maximoParticipante'],
+            'description': data['descripcion'],
+            # 'press_release': '<p></p>',
+        }
+        return workshop
 
 
 class UpdateParticipantsForm(form.Form):
