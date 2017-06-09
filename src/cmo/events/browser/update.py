@@ -31,6 +31,13 @@ headers = {
     'Cache-Control': 'no-cache',
 }
 
+config = {
+    'user': 'user',
+    'password': 'some_password',
+    'host': '192.168.33.1',
+    'database': 'databasename'
+}
+
 
 class IMyForm(model.Schema):
 
@@ -75,14 +82,6 @@ class UpdateWorkshopsForm(form.Form):
         logger.info('Updating Workshops')
         data, errors = self.extractData()
         year = data['year']
-
-        config = {
-            'user': 'user',
-            'password': 'some_password',
-            'host': '192.168.33.1',
-            'database': 'databasename'
-        }
-
         try:
             cnx = mysql.connector.connect(**config)
         except mysql.connector.Error as err:
@@ -140,11 +139,11 @@ class UpdateWorkshopsForm(form.Form):
 
 
 class UpdateParticipantsForm(form.Form):
-    """Update Participants from Birs DB."""
+    """Update Participants lists."""
 
-    @button.buttonAndHandler(_(u'Update participants'))
+    @button.buttonAndHandler(_(u'Update Participants'))
     def handle_update_participants(self, action):
-        """Update participants list
+        """Update participants list from Birs API
         """
         logger.info('Updating participants for {0}'.format(self.context.id))
         birs_uri = api.portal.get_registry_record('cmo.birs_api_uri')
@@ -178,3 +177,56 @@ class UpdateParticipantsForm(form.Form):
                     title=kargs['firstname'],
                     container=self.context,
                     **kargs)
+
+    @button.buttonAndHandler(_(u'Update Participants from DB'))
+    def handle_update_participants_db(self, action):
+        """Update participants list from CIMAT db
+        """
+        logger.info('Updating participants for {0}'.format(self.context.id))
+        try:
+            cnx = mysql.connector.connect(**config)
+        except mysql.connector.Error as err:
+            api.portal.show_message(err, self.request, type=u'error')
+        else:
+            # A MySQLCursorDict cursor returns each row as a dictionary
+            cursor = cnx.cursor(dictionary=True)
+            query = ("SELECT * FROM user WHERE evento = %s ORDER BY lastname")
+            cursor.execute(query, (self.context.id,))
+            json_data = [self.person_to_birs(row) for row in cursor]
+            self.update_participants(json_data)
+            cursor.close()
+            cnx.close()
+            api.portal.show_message(_(u'Updated!'), self.request, type=u'info')
+        logger.info('Done.')
+
+    def person_to_birs(self, data):
+        """Returns a workshop with birs api format
+        """
+        person = {
+            'Workshop': data['evento'],
+            'Person': {
+                'lastname': data['lastname'],
+                'firstname': data['name'],
+                'country': data['pais'],
+                'email': data['email'],
+                'gender': data['genero'],
+                'affiliation': data['company'],
+                'salutation': data['grado'],
+                'url': data['pagina'],
+                'phone': data['phone'],
+                'phd_year': data['graduacion'],
+                'academic_status': data['status'],
+            },
+            'Membership': {
+                'arrival_date': str(data['arrival_date']),
+                'departure_date': str(data['departure_date']),
+                'attendance': data['confirmed'],
+                'role': data['rol'],
+                'replied_at': None,
+                'has_guest': data['acompanante'],
+                'special_info': data['informacion'],
+                'off_site': data['reserva'],
+                # 'event_notes': None
+            }
+        }
+        return person
