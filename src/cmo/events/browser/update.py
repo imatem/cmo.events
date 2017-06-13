@@ -218,8 +218,8 @@ class UpdateParticipantsForm(form.Form):
                 'academic_status': data['status'],
             },
             'Membership': {
-                'arrival_date': str(data['arrival_date']),
-                'departure_date': str(data['departure_date']),
+                'arrival_date': str(data['arrival_date']) or None,
+                'departure_date': str(data['departure_date']) or None,
                 'attendance': data['confirmed'],
                 'role': data['rol'],
                 'replied_at': None,
