@@ -89,7 +89,7 @@ class UpdateWorkshopsForm(form.Form):
         else:
             # A MySQLCursorDict cursor returns each row as a dictionary
             cursor = cnx.cursor(dictionary=True)
-            query = ("SELECT * FROM eventos WHERE fechaIni BETWEEN %s AND %s ORDER BY codigo")
+            query = ("SELECT * FROM eventos WHERE fechaIni BETWEEN %s AND %s ORDER BY fechaIni")
             event_start = date(int(year), 1, 1)
             event_end = date(int(year), 12, 31)
             cursor.execute(query, (event_start, event_end))
@@ -214,7 +214,7 @@ class UpdateParticipantsForm(form.Form):
                 'salutation': data['grado'],
                 'url': data['pagina'],
                 'phone': data['phone'],
-                'phd_year': data['graduacion'],
+                'phd_year': data['graduacion'] or None,
                 'academic_status': data['status'],
             },
             'Membership': {
