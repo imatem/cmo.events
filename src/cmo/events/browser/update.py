@@ -4,6 +4,7 @@ from datetime import date
 from datetime import datetime
 from cmo.events import _
 from plone import api
+from plone.i18n.normalizer import idnormalizer
 from plone.supermodel import model
 from requests.exceptions import ConnectionError
 from requests.exceptions import HTTPError
@@ -17,19 +18,6 @@ import mysql.connector
 import requests
 
 logger = logging.getLogger('Plone')
-
-headers = {
-    'Host': 'www.birs.ca',
-    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:52.0) Gecko/20100101 Firefox/52.0',  # noqa
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',  # noqa
-    'Accept-Language': 'en-US,en;q=0.5',
-    'Accept-Encoding': 'gzip, deflate, br',
-    'Connection': 'keep-alive',
-    'Upgrade-Insecure-Requests': '1',
-    'Authorization': 'Basic Ymlyc3dzOkcwcjFsbDRfU2wxcHAzcno=',
-    'Pragma': 'no-cache',
-    'Cache-Control': 'no-cache',
-}
 
 config = {
     'user': 'user',
@@ -66,7 +54,7 @@ class UpdateWorkshopsForm(form.Form):
         birs_uri = api.portal.get_registry_record('cmo.birs_api_uri')
         url = '/'.join([birs_uri, 'event_data_for_year', year])
         try:
-            req = requests.get(url, headers=headers)
+            req = requests.get(url)
             req.raise_for_status()
         except (ConnectionError, HTTPError) as err:
             api.portal.show_message(err, self.request, type=u'error')
@@ -149,7 +137,7 @@ class UpdateParticipantsForm(form.Form):
         birs_uri = api.portal.get_registry_record('cmo.birs_api_uri')
         url = '/'.join([birs_uri, 'members', self.context.id])
         try:
-            req = requests.get(url, headers=headers)
+            req = requests.get(url)
             req.raise_for_status()
         except (ConnectionError, HTTPError) as err:
             api.portal.show_message(err, self.request, type=u'error')
@@ -173,7 +161,7 @@ class UpdateParticipantsForm(form.Form):
                         del kargs[d]
                 api.content.create(
                     type='Participant',
-                    id=kargs['email'],
+                    id=idnormalizer.normalize(kargs['email']),
                     title=kargs['firstname'],
                     container=self.context,
                     **kargs)
