@@ -52,6 +52,9 @@ class UpdateWorkshopsForm(form.Form):
         data, errors = self.extractData()
         year = data['year']
         birs_uri = api.portal.get_registry_record('cmo.birs_api_uri')
+        if birs_uri is None:
+            api.portal.show_message(_(u'CMO Settings: No Birs API defined!'), self.request, type=u'error')
+            return
         url = '/'.join([birs_uri, 'event_data_for_year', year])
         try:
             req = requests.get(url)
@@ -135,6 +138,9 @@ class UpdateParticipantsForm(form.Form):
         """
         logger.info('Updating participants for {0}'.format(self.context.id))
         birs_uri = api.portal.get_registry_record('cmo.birs_api_uri')
+        if birs_uri is None:
+            api.portal.show_message(_(u'CMO Settings: No Birs API defined!'), self.request, type=u'error')
+            return
         url = '/'.join([birs_uri, 'members', self.context.id])
         try:
             req = requests.get(url)
@@ -150,7 +156,8 @@ class UpdateParticipantsForm(form.Form):
         """Update participants list
         """
         for item in json_data:
-            if item['Person']['email'] not in self.context:
+            item_id = idnormalizer.normalize(item['Person']['email'])
+            if item_id not in self.context:
                 kargs = dict(item['Person'])
                 kargs.update(item['Membership'])
                 kargs['workshop'] = item['Workshop']
@@ -161,7 +168,7 @@ class UpdateParticipantsForm(form.Form):
                         del kargs[d]
                 api.content.create(
                     type='Participant',
-                    id=idnormalizer.normalize(kargs['email']),
+                    id=item_id,
                     title=kargs['firstname'],
                     container=self.context,
                     **kargs)
