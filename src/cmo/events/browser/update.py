@@ -12,6 +12,7 @@ from z3c.form import button
 from z3c.form import field
 from z3c.form import form
 from zope import schema
+from zope.component import getMultiAdapter
 
 import logging
 import mysql.connector
@@ -86,6 +87,8 @@ class UpdateWorkshopsForm(form.Form):
                     title=item['name'],
                     container=folder,
                     **item)
+
+                # create certificate
                 template = api.content.get('/templates-for-certificates/latex-template')
                 api.content.create(
                     type='Certificate',
@@ -93,6 +96,10 @@ class UpdateWorkshopsForm(form.Form):
                     title='Certificate',
                     container=workshop,
                     ctemplate=api.content.get_uuid(obj=template))
+
+                # update participants
+                workshopview = getMultiAdapter((workshop, self.request), name='update-participants')
+                workshopview.handle_update_participants_db(workshopview, '')
 
     @button.buttonAndHandler(_(u'Update Workshops from DB'))
     def handle_update_workshops_db(self, action):
@@ -169,7 +176,7 @@ class UpdateParticipantsForm(form.Form):
                 kargs.update(item['Membership'])
                 kargs['workshop'] = item['Workshop']
                 for d in ['arrival_date', 'replied_at', 'departure_date']:
-                    if kargs[d] is not None:
+                    if kargs[d] is not None and kargs[d] != '0000-00-00 00:00:00':
                         kargs[d] = datetime.strptime(kargs[d], '%Y-%m-%d %H:%M:%S')  # noqa
                     else:
                         del kargs[d]
@@ -187,6 +194,7 @@ class UpdateParticipantsForm(form.Form):
         logger.info('Updating participants for {0}'.format(self.context.id))
         try:
             cnx = mysql.connector.connect(**config)
+            # cnx.set_charset_collation('utf-8')
         except mysql.connector.Error as err:
             api.portal.show_message(err, self.request, type=u'error')
         else:
@@ -204,15 +212,30 @@ class UpdateParticipantsForm(form.Form):
     def person_to_birs(self, data):
         """Returns a workshop with birs api format
         """
+        try:
+            lastname = data['lastname'].encode('iso-8859-1').decode('utf-8')
+        except UnicodeEncodeError as e:
+            lastname = data['lastname'].encode('cp1252').decode('utf-8')
+
+        try:
+            firstname = data['name'].encode('iso-8859-1').decode('utf-8')
+        except UnicodeEncodeError as e:
+            firstname = data['name'].encode('cp1252').decode('utf-8')
+
+        try:
+            affiliation = data['company'].encode('iso-8859-1').decode('utf-8')
+        except UnicodeEncodeError as e:
+            affiliation = data['company'].encode('cp1252').decode('utf-8')
+
         person = {
             'Workshop': data['evento'],
             'Person': {
-                'lastname': data['lastname'],
-                'firstname': data['name'],
+                'lastname': lastname,
+                'firstname': firstname,
                 'country': data['pais'],
                 'email': data['email'],
                 'gender': data['genero'],
-                'affiliation': data['company'],
+                'affiliation': affiliation,
                 'salutation': data['grado'],
                 'url': data['pagina'],
                 'phone': data['phone'],
