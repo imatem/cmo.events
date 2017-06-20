@@ -105,12 +105,19 @@ class UpdateWorkshopsForm(form.Form):
                 item['start_date'] = datetime.strptime(item['start_date'], '%Y-%m-%d')  # noqa
                 item['end_date'] = datetime.strptime(item['end_date'], '%Y-%m-%d')  # noqa
                 item['max_participants'] = int(item['max_participants'])
-                api.content.create(
+                workshop = api.content.create(
                     type='Workshop',
                     id=item['code'],
                     title=item['name'],
                     container=folder,
                     **item)
+                template = api.content.get('/templates-for-certificates/latex-template')
+                api.content.create(
+                    type='Certificate',
+                    id='Certificate',
+                    title='Certificate',
+                    container=workshop,
+                    ctemplate=api.content.get_uuid(obj=template))
 
     def workshop_to_birs(self, data):
         """Returns a workshop with birs api format
