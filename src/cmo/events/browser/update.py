@@ -66,31 +66,6 @@ class UpdateWorkshopsForm(form.Form):
             api.portal.show_message(_(u'Updated!'), self.request, type=u'info')
         logger.info('Done.')
 
-    @button.buttonAndHandler(_(u'Update Workshops from DB'))
-    def handle_update_workshops_db(self, action):
-        """Update workshops list from CIMAT db
-        """
-        logger.info('Updating Workshops')
-        data, errors = self.extractData()
-        year = data['year']
-        try:
-            cnx = mysql.connector.connect(**config)
-        except mysql.connector.Error as err:
-            api.portal.show_message(err, self.request, type=u'error')
-        else:
-            # A MySQLCursorDict cursor returns each row as a dictionary
-            cursor = cnx.cursor(dictionary=True)
-            query = ("SELECT * FROM eventos WHERE fechaIni BETWEEN %s AND %s ORDER BY fechaIni")
-            event_start = date(int(year), 1, 1)
-            event_end = date(int(year), 12, 31)
-            cursor.execute(query, (event_start, event_end))
-            json_data = [self.workshop_to_birs(row) for row in cursor]
-            self.update_workshops(year, json_data)
-            cursor.close()
-            cnx.close()
-            api.portal.show_message(_(u'Updated!'), self.request, type=u'info')
-        logger.info('Done.')
-
     def update_workshops(self, year, json_data):
         """Update workshops for year
         """
@@ -118,6 +93,31 @@ class UpdateWorkshopsForm(form.Form):
                     title='Certificate',
                     container=workshop,
                     ctemplate=api.content.get_uuid(obj=template))
+
+    @button.buttonAndHandler(_(u'Update Workshops from DB'))
+    def handle_update_workshops_db(self, action):
+        """Update workshops list from CIMAT db
+        """
+        logger.info('Updating Workshops')
+        data, errors = self.extractData()
+        year = data['year']
+        try:
+            cnx = mysql.connector.connect(**config)
+        except mysql.connector.Error as err:
+            api.portal.show_message(err, self.request, type=u'error')
+        else:
+            # A MySQLCursorDict cursor returns each row as a dictionary
+            cursor = cnx.cursor(dictionary=True)
+            query = ("SELECT * FROM eventos WHERE fechaIni BETWEEN %s AND %s ORDER BY fechaIni")
+            event_start = date(int(year), 1, 1)
+            event_end = date(int(year), 12, 31)
+            cursor.execute(query, (event_start, event_end))
+            json_data = [self.workshop_to_birs(row) for row in cursor]
+            self.update_workshops(year, json_data)
+            cursor.close()
+            cnx.close()
+            api.portal.show_message(_(u'Updated!'), self.request, type=u'info')
+        logger.info('Done.')
 
     def workshop_to_birs(self, data):
         """Returns a workshop with birs api format
