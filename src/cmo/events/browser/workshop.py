@@ -230,7 +230,8 @@ class WorkshopView(WidgetsView):
         """Update participants list
         """
         for item in json_data:
-            if item['Person']['email'] not in [participant.email for participant in self.context.values() if participant.portal_type == 'Participant']:
+            userid = idnormalizer.normalize(item['Person']['email'])
+            if userid not in self.context:
                 kargs = dict(item['Person'])
                 kargs.update(item['Membership'])
                 kargs['workshop'] = item['Workshop']
@@ -247,7 +248,6 @@ class WorkshopView(WidgetsView):
                     container=self.context,
                     **kargs)
             else:
-                userid = idnormalizer.normalize(item['Person']['email'])
                 participant = self.context[userid]
                 participant.country = item['Person']['country']
                 participant.academic_status = item['Person']['academic_status']
