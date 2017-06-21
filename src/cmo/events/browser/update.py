@@ -17,6 +17,7 @@ from zope.component import getMultiAdapter
 import logging
 import mysql.connector
 import requests
+import string
 
 logger = logging.getLogger('Plone')
 
@@ -183,7 +184,7 @@ class UpdateParticipantsForm(form.Form):
                 api.content.create(
                     type='Participant',
                     id=item_id,
-                    title=kargs['firstname'],
+                    title=' '.join([kargs['firstname'], kargs['lastname']]),
                     container=self.context,
                     **kargs)
 
@@ -227,6 +228,11 @@ class UpdateParticipantsForm(form.Form):
         except UnicodeEncodeError as e:
             affiliation = data['company'].encode('cp1252').decode('utf-8')
 
+        try:
+            special_info = data['informacion'].encode('iso-8859-1').decode('utf-8')
+        except UnicodeEncodeError as e:
+            special_info = data['informacion'].encode('cp1252').decode('utf-8')
+
         person = {
             'Workshop': data['evento'],
             'Person': {
@@ -249,9 +255,12 @@ class UpdateParticipantsForm(form.Form):
                 'role': data['rol'],
                 'replied_at': None,
                 'has_guest': data['acompanante'],
-                'special_info': data['informacion'],
+                'special_info': special_info or data['requerimientos'],
                 'off_site': data['reserva'],
                 # 'event_notes': None
+                'visa': data['visa'],
+                'nameGuest': data['acompaname'],
+                'hotel': string.capwords(data['hotel']) or None,
             }
         }
         return person
