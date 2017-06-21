@@ -489,7 +489,7 @@ class CertificatesView(BrowserView):
             file_os.close()
             os.system("cd {0}; pdflatex -interaction=nonstopmode {1}".format(tempdir, file_path))
             # applied double pdflatex for draft
-            os.system("cd {0}; pdflatex -interaction=nonstopmode {1}".format(tempdir, file_path))
+            # os.system("cd {0}; pdflatex -interaction=nonstopmode {1}".format(tempdir, file_path))
         except Exception:
             return None
 
