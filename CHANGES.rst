@@ -2,8 +2,8 @@ Changelog
 =========
 
 
-1.0a1 (unreleased)
-------------------
+1.0 (2017-06-21)
+----------------
 
 - Initial release.
-  [adriana-rv]
+  [adriana-rv, gil-cano]

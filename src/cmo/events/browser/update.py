@@ -102,7 +102,7 @@ class UpdateWorkshopsForm(form.Form):
                 workshopview = getMultiAdapter((workshop, self.request), name='update-participants')
                 workshopview.handle_update_participants_db(workshopview, '')
 
-    # @button.buttonAndHandler(_(u'Update Workshops from DB'))
+    @button.buttonAndHandler(_(u'Update Workshops from DB'))
     def handle_update_workshops_db(self, action):
         """Update workshops list from CIMAT db
         """
