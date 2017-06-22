@@ -125,35 +125,67 @@ class WorkshopView(WidgetsView):
 
     def positionlabelfield(self, labelfield):
         orderfields = OrderedDict()
+        # orderfields[u'label_cmo_workshop'] = 0
+        # orderfields[u'label_cmo_firstname'] = 1
+        # orderfields[u'label_cmo_lastname'] = 2
+        # orderfields[u'label_cmo_affiliation'] = 3
+        # orderfields[u'label_cmo_year'] = 4
+        # orderfields[u'label_cmo_attendance'] = 5
+        # orderfields[u'label_cmo_email'] = 6
+        # orderfields[u'label_cmo_role'] = 7
+        # orderfields[u'label_cmo_hotel'] = 8
+        # orderfields[u'label_cmo_externalHotel'] = 9
+        # orderfields[u'label_cmo_arrival'] = 10
+        # orderfields[u'label_cmo_departure'] = 11
+        # orderfields[u'label_cmo_hasguest'] = 12
+        # orderfields[u'label_cmo_nameGuest'] = 13
+        # orderfields[u'label_cmo_specialInfo'] = 14
+        # orderfields[u'label_cmo_gender'] = 15
+        # orderfields[u'label_cmo_country'] = 16
+        # orderfields[u'label_cmo_status'] = 17
+        # orderfields[u'label_cmo_grade'] = 18
+        # orderfields[u'label_cmo_phone'] = 19
+        # orderfields[u'label_cmo_webpage'] = 20
+        # orderfields[u'label_cmo_replied'] = 21
+        # orderfields[u'label_cmo_offsite'] = 22
+        # orderfields[u'label_cmo_eventNotes'] = 23
+        # orderfields[u'label_cmo_visa'] = 24
+        # orderfields[u'label_cmo_certificatesended'] = 25
+        # orderfields[u'label_cmo_certificaterequested'] = 26
+
         orderfields[u'label_cmo_workshop'] = 0
         orderfields[u'label_cmo_firstname'] = 1
         orderfields[u'label_cmo_lastname'] = 2
-        orderfields[u'label_cmo_email'] = 5
-        orderfields[u'label_cmo_country'] = 15
-        orderfields[u'label_cmo_gender'] = 14
+        orderfields[u'label_cmo_email'] = 6
+        orderfields[u'label_cmo_country'] = 16
+        orderfields[u'label_cmo_gender'] = 15
         orderfields[u'label_cmo_affiliation'] = 3
         orderfields[u'label_cmo_grade'] = 18
         orderfields[u'label_cmo_webpage'] = 20
         orderfields[u'label_cmo_phone'] = 19
         orderfields[u'label_cmo_year'] = 4
-        orderfields[u'label_cmo_status'] = 16
-        orderfields[u'label_cmo_arrival'] = 9
-        orderfields[u'label_cmo_departure'] = 10
-        orderfields[u'label_cmo_attendance'] = 17
-        orderfields[u'label_cmo_role'] = 6
+        orderfields[u'label_cmo_status'] = 17
+        orderfields[u'label_cmo_arrival'] = 10
+        orderfields[u'label_cmo_departure'] = 11
+        orderfields[u'label_cmo_attendance'] = 5
+        orderfields[u'label_cmo_role'] = 7
         orderfields[u'label_cmo_replied'] = 21
-        orderfields[u'label_cmo_hasguest'] = 11
-        orderfields[u'label_cmo_specialInfo'] = 13
+        orderfields[u'label_cmo_hasguest'] = 12
+        orderfields[u'label_cmo_specialInfo'] = 14
         orderfields[u'label_cmo_offsite'] = 22
         orderfields[u'label_cmo_eventNotes'] = 23
         orderfields[u'label_cmo_certificatesended'] = 25
         orderfields[u'label_cmo_certificaterequested'] = 26
-        orderfields[u'label_cmo_hotel'] = 7
+        orderfields[u'label_cmo_hotel'] = 8
         orderfields[u'label_cmo_visa'] = 24
-        orderfields[u'label_cmo_externalHotel'] = 8
-        orderfields[u'label_cmo_nameGuest'] = 12
-
+        orderfields[u'label_cmo_externalHotel'] = 9
+        orderfields[u'label_cmo_nameGuest'] = 13
         return orderfields.get(labelfield, -1)
+
+
+
+
+
 
     def participantsWithcolumnOrder(self, attendance=[]):
 
