@@ -156,7 +156,7 @@ class ICertificate(Interface):
     preamble = schema.Text(
         title=_(u'label_cmo_certificate_preamble', u'Preamble'),
         required=False,
-        default=u'This is to cetify that:'
+        default=u'This is to certify that:'
     )
 
     participantdata = schema.Text(
