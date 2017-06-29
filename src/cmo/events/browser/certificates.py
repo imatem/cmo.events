@@ -588,7 +588,7 @@ class CertificatesView(BrowserView):
                 text = MIMEText(mail_text, _charset='UTF-8')
                 message = MIMEMultipart(_subparts=(text, pdf))
 
-                participant_email += ', c.arias@im.unam.mx'
+                participant_email += ', cmo-birs@im.unam.mx'
                 try:
                     api.portal.send_email(
                         recipient=participant_email,
