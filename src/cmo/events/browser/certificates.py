@@ -337,7 +337,7 @@ class CertificatesView(BrowserView):
             '05': 'May',
             '06': 'June',
             '07': 'July',
-            '08': 'Augost',
+            '08': 'August',
             '09': 'September',
             '10': 'Octover',
             '11': 'November',
