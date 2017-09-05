@@ -444,12 +444,14 @@ class CertificatesView(BrowserView):
             texfile = texfiles[0]
             imagesg = images[-1]
         except Exception:
-            return None
+            # return None
+            raise Exception("No hay archivos de template")
 
         try:
             tempdir = tempfile.mkdtemp()
         except Exception:
-            return None
+            # return None
+            raise Exception("No se pudo crear el temporal")
 
         #  For cvs file
         headers = [
@@ -491,7 +493,8 @@ class CertificatesView(BrowserView):
             # applied double pdflatex for draft
             # os.system("cd {0}; pdflatex -interaction=nonstopmode {1}".format(tempdir, file_path))
         except Exception:
-            return None
+            # return None
+            raise Exception("No se pudo ejecutar el latex")
 
         pdfname = file_path.replace('.tex', '.pdf')
         # os.system("cp {0} ~/Desktop".format(pdfname))
