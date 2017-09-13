@@ -588,6 +588,7 @@ class CertificatesView(BrowserView):
 
                 pdffile = open(pdfdata[0], "rb")
                 pdf = MIMEApplication(pdffile.read(), _subtype='pdf')
+                pdf.add_header('content-disposition', 'attachment', filename='certificate.pdf')
                 text = MIMEText(mail_text, _charset='UTF-8')
                 message = MIMEMultipart(_subparts=(text, pdf))
 
