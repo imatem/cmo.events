@@ -39,7 +39,6 @@ class WorkshopView(WidgetsView):
     def __call__(self):
         # utility function to add resource to rendered page
         # add_resource_on_request(self.request, 'tablecmo')
-        # import pdb; pdb.set_trace()
         if self.request.form:
             self.handle_update_participants()
 
@@ -227,12 +226,11 @@ class WorkshopView(WidgetsView):
             u'Sin Hotel': 3,
 
         }
-
         aux_applications = [
             (
                 app,
-                hotels.get(app[9], 4),
-                idnormalizer.normalize(app[9]),
+                hotels.get(app[10], 4),
+                idnormalizer.normalize(app[7]),
                 idnormalizer.normalize(app[3]),
                 idnormalizer.normalize(app[4])
             ) for app in orderparticipants['rows']
@@ -283,6 +281,7 @@ class WorkshopView(WidgetsView):
                 participant = self.context[userid]
                 participant.country = item['Person']['country']
                 participant.academic_status = item['Person']['academic_status']
+                participant.affiliation = item['Person']['affiliation']
                 participant.attendance = item['Membership']['attendance']
                 participant.replied_at = item['Membership']['replied_at']
                 participant.event_notes = item['Membership']['event_notes']
