@@ -153,7 +153,6 @@ class CertificatesView(BrowserView):
                     )
 
             if 'getbadges' in formkeys:
-                import pdb; pdb.set_trace()
                 apps = self.dataforbadge(uids)
                 if apps:
                     pdfdata = self.createBadgePDF(apps)
@@ -167,7 +166,7 @@ class CertificatesView(BrowserView):
 
             pdffile = pdfdata[0]
             new_file = open(pdffile, "rb")
-            
+
             self.request.response.setHeader("Content-Type", "application/pdf")
             # self.request.response.setHeader("Content-Length", len(pdfcontent))
             # self.request.response.setHeader('Last-Modified', DateTime.rfc822(DateTime()))
@@ -501,11 +500,9 @@ class CertificatesView(BrowserView):
         # os.system("cp {0} ~/Desktop".format(pdfname))
         return (pdfname, tempdir)
 
-
     def createBadgePDF(self, participants):
 
         # \name, \affiliation, \workshop,
-        import pdb; pdb.set_trace()
         certificates = self.getInstanceCertificate()
         if not certificates:
             return None
