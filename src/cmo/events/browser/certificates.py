@@ -153,6 +153,7 @@ class CertificatesView(BrowserView):
                     )
 
             if 'getbadges' in formkeys:
+                import pdb; pdb.set_trace()
                 apps = self.dataforbadge(uids)
                 if apps:
                     pdfdata = self.createBadgePDF(apps)
@@ -504,7 +505,7 @@ class CertificatesView(BrowserView):
     def createBadgePDF(self, participants):
 
         # \name, \affiliation, \workshop,
-        
+        import pdb; pdb.set_trace()
         certificates = self.getInstanceCertificate()
         if not certificates:
             return None
@@ -541,7 +542,16 @@ class CertificatesView(BrowserView):
             writer = csv.writer(csvfile, delimiter=",")
             writer.writerow(headers)
             for participant in participants:
-                writer.writerow([s.encode('utf8') for s in participant])
+                # writer.writerow([s.encode('utf8') for s in participant])
+                allvaluesp = []
+                for vpr in participant:
+                    if vpr:
+                        allvaluesp.append(vpr.encode('utf8'))
+                    else:
+                        allvaluesp.append('')
+
+                writer.writerow(allvaluesp)
+
 
             csvfile.close()
 
