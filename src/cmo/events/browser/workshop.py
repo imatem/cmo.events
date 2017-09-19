@@ -279,9 +279,13 @@ class WorkshopView(WidgetsView):
                     **kargs)
             else:
                 participant = self.context[userid]
+                participant.lastname = item['Person']['lastname']
+                participant.firstname = item['Person']['firstname']
                 participant.country = item['Person']['country']
-                participant.academic_status = item['Person']['academic_status']
                 participant.affiliation = item['Person']['affiliation']
+                participant.phd_year = item['Person']['phd_year']
+                participant.academic_status = item['Person']['academic_status']
                 participant.attendance = item['Membership']['attendance']
                 participant.replied_at = item['Membership']['replied_at']
+                participant.special_info = item['Membership']['special_info']
                 participant.event_notes = item['Membership']['event_notes']
