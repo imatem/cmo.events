@@ -45,7 +45,6 @@ class WorkshopView(WidgetsView):
         return super(WorkshopView, self).__call__()
 
     def participants(self, attendance=[]):
-
         allvaluesitems = self.context.values()
 
         items = []
@@ -181,11 +180,6 @@ class WorkshopView(WidgetsView):
         orderfields[u'label_cmo_nameGuest'] = 13
         return orderfields.get(labelfield, -1)
 
-
-
-
-
-
     def participantsWithcolumnOrder(self, attendance=[]):
 
         participants = self.participants(attendance)
@@ -259,6 +253,7 @@ class WorkshopView(WidgetsView):
     def update_participants(self, json_data):
         """Update participants list
         """
+        newparticipants = []
         for item in json_data:
             userid = idnormalizer.normalize(item['Person']['email'])
             if userid not in self.context:
@@ -274,11 +269,14 @@ class WorkshopView(WidgetsView):
                 api.content.create(
                     type='Participant',
                     id=idnormalizer.normalize(kargs['email']),
-                    title=kargs['firstname'],
+                    title=' '.join([kargs['firstname'], kargs['lastname']]),
                     container=self.context,
                     **kargs)
+                newparticipants.append(' '.join([kargs['firstname'], kargs['lastname']]))
             else:
                 participant = self.context[userid]
+                participant.title = ' '.join(
+                    [item['Person']['firstname'], item['Person']['lastname']])
                 participant.lastname = item['Person']['lastname']
                 participant.firstname = item['Person']['firstname']
                 participant.country = item['Person']['country']
@@ -289,3 +287,7 @@ class WorkshopView(WidgetsView):
                 participant.replied_at = item['Membership']['replied_at']
                 participant.special_info = item['Membership']['special_info']
                 participant.event_notes = item['Membership']['event_notes']
+                participant.reindexObject()
+        if newparticipants:
+            msg = _(u'New participants: ') + ', '.join(newparticipants)
+            api.portal.show_message(msg, self.request, type=u'info')
