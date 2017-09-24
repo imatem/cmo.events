@@ -15,7 +15,10 @@ from zope import schema
 from zope.component import getMultiAdapter
 
 import logging
-import mysql.connector
+try:
+    import mysql.connector
+except Exception as e:
+    MYSQL = False
 import requests
 import string
 
@@ -98,7 +101,7 @@ class UpdateWorkshopsForm(form.Form):
                     container=workshop,
                     ctemplate=api.content.get_uuid(obj=template))
 
-                # update participants
+                # update participants from MYSQL database
                 # workshopview = getMultiAdapter((workshop, self.request), name='update-participants')
                 # workshopview.handle_update_participants_db(workshopview, '')
 
