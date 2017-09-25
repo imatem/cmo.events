@@ -19,9 +19,6 @@ from email.mime.text import MIMEText
 from email.mime.application import MIMEApplication
 
 
-
-
-
 HEADER_LATEX_TEMPLATE = r"""
 
 \documentclass[16pt]{scrartcl}
@@ -75,19 +72,19 @@ BODY_LATEX_TEMPLATE = r"""
             \par}}
         \end{minipage}
         \hspace*{\fill}
-        
+
         \vskip3em
-        
+
         {
         \noindent{
         \doublespacing
         %s
         }}
-        
+
         \noindent
         {\singlespacing
         \vfill
-        
+
         \hspace*{\fill}
         \begin{minipage}[l]{2.25in}
             {\centering
@@ -96,7 +93,7 @@ BODY_LATEX_TEMPLATE = r"""
             \par}}
         \end{minipage}
         \hspace*{\fill}
-       
+
         \vfill
         \pagebreak
         }

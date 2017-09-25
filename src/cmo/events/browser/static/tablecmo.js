@@ -4,7 +4,7 @@ require([
 ], function($){
 
 $(document).ready(function() {
-    var table = $('#workshoptable').DataTable( {       
+    var table = $('#workshoptable').DataTable( {
         // "scrollY": "600px",
         "paging": false,
         // "sScrollY": "600px",
@@ -18,10 +18,10 @@ $(document).ready(function() {
     } );
     $('a.toggle-vis').on( 'click', function (e) {
         e.preventDefault();
- 
+
         // Get the column API object
         var column = table.column( $(this).attr('data-column') );
- 
+
         // Toggle the visibility
         column.visible( ! column.visible() );
     } );
