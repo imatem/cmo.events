@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
+from cmo.events import _
 from datetime import date
 from datetime import datetime
-from cmo.events import _
 from plone import api
 from plone.i18n.normalizer import idnormalizer
 from plone.supermodel import model
@@ -12,15 +12,17 @@ from z3c.form import button
 from z3c.form import field
 from z3c.form import form
 from zope import schema
-from zope.component import getMultiAdapter
 
+# from zope.component import getMultiAdapter
 import logging
+import requests
+import string
+
+
 try:
     import mysql.connector
 except Exception as e:
     MYSQL = False
-import requests
-import string
 
 logger = logging.getLogger('Plone')
 
@@ -119,7 +121,7 @@ class UpdateWorkshopsForm(form.Form):
         else:
             # A MySQLCursorDict cursor returns each row as a dictionary
             cursor = cnx.cursor(dictionary=True)
-            query = ("SELECT * FROM eventos WHERE fechaIni BETWEEN %s AND %s ORDER BY fechaIni")
+            query = ('SELECT * FROM eventos WHERE fechaIni BETWEEN %s AND %s ORDER BY fechaIni')
             event_start = date(int(year), 1, 1)
             event_end = date(int(year), 12, 31)
             cursor.execute(query, (event_start, event_end))
@@ -204,7 +206,7 @@ class UpdateParticipantsForm(form.Form):
         else:
             # A MySQLCursorDict cursor returns each row as a dictionary
             cursor = cnx.cursor(dictionary=True)
-            query = ("SELECT * FROM user WHERE evento = %s ORDER BY lastname")
+            query = ('SELECT * FROM user WHERE evento = %s ORDER BY lastname')
             cursor.execute(query, (self.context.id,))
             json_data = [self.person_to_birs(row) for row in cursor]
             self.update_participants(json_data)
@@ -218,22 +220,22 @@ class UpdateParticipantsForm(form.Form):
         """
         try:
             lastname = data['lastname'].encode('iso-8859-1').decode('utf-8')
-        except UnicodeEncodeError as e:
+        except UnicodeEncodeError:
             lastname = data['lastname'].encode('cp1252').decode('utf-8')
 
         try:
             firstname = data['name'].encode('iso-8859-1').decode('utf-8')
-        except UnicodeEncodeError as e:
+        except UnicodeEncodeError:
             firstname = data['name'].encode('cp1252').decode('utf-8')
 
         try:
             affiliation = data['company'].encode('iso-8859-1').decode('utf-8')
-        except UnicodeEncodeError as e:
+        except UnicodeEncodeError:
             affiliation = data['company'].encode('cp1252').decode('utf-8')
 
         try:
             special_info = data['informacion'].encode('iso-8859-1').decode('utf-8')
-        except UnicodeEncodeError as e:
+        except UnicodeEncodeError:
             special_info = data['informacion'].encode('cp1252').decode('utf-8')
 
         person = {
