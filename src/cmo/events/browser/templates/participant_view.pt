@@ -23,7 +23,7 @@
     <legend tal:content="group/label" />
 
     <tal:block tal:repeat="widgets group/widgets/values">
-      <b i18n:translate="" tal:content="widgets/label">:
+      <b i18n:translate="" tal:content="widgets/label" />:
       <span tal:content="widgets/value"/><br/>
     </tal:block>
     </fieldset>
