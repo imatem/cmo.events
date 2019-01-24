@@ -42,4 +42,7 @@
       name="cmo.events.certificatestemplates"
       />
 
+  <adapter name="workshop_start" factory=".indexers.workshop_start" />
+  <adapter name="workshop_end" factory=".indexers.workshop_end" />
+
 </configure>

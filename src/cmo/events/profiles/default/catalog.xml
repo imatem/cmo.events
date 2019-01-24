@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<object name="portal_catalog">
+  <index name="workshop_start" meta_type="DateIndex">
+    <indexed_attr value="start_date"/>
+  </index>
+  <index name="workshop_end" meta_type="DateIndex">
+    <indexed_attr value="end_date"/>
+  </index>
+</object>
