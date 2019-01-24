@@ -1,0 +1,191 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+  xmlns:tal="http://xml.zope.org/namespaces/tal"
+  xmlns:metal="http://xml.zope.org/namespaces/metal"
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+  lang="en"
+  metal:use-macro="context/main_template/macros/master"
+  i18n:domain="cmo.events">
+
+  <metal:css fill-slot="style_slot">
+    <style type="text/css">
+      .dataTables_scrollHead{
+        overflow: visible !important;
+      }
+      .dataTables_scrollBody{
+        overflow: visible !important;
+      }
+      .documentDescription{
+        display:none !important;
+      }
+
+      a.button {
+        -webkit-appearance: button;
+        -moz-appearance: button;
+        color: #4d4d4d;
+        background-color: #e5e5e5;
+        border-color: #b2b2b2;
+
+        display: inline-block;
+        margin-bottom: 0;
+        font-weight: 700;
+        text-align: center;
+        text-shadow: 0 1px rgba(0, 0, 0, 0.25);
+        vertical-align: middle;
+        cursor: pointer;
+        background-image: none;
+        border: 1px solid transparent;
+        white-space: nowrap;
+        padding: 6px 12px;
+        font-size: 14px;
+        line-height: 1.42857143;
+        border-radius: 2px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+
+
+      }
+    </style>
+  </metal:css>
+
+  <body>
+
+    <!-- This view is in plone.app.dexterity.browser.container.pt -->
+    <metal:main fill-slot="content-core">
+      <script type="text/javascript" charset="utf-8">
+  $(document).ready(function() {
+    var table = $('#participantstable').DataTable( {
+        // "scrollY": "600px",
+        "paging": false,
+        // "sScrollY": "600px",
+        // "bPaginate": false,
+        // "bScrollCollapse": true,
+        "bAutoWidth": true,
+        // "info":     false,
+        "searching": true,
+        "sScrollX": "100%",
+        "sScrollXInner": "100%",
+        //fixedHeader: true,
+        //responsive: true,
+        dom: 'Bfrtip',
+        // columnDefs: [
+        //   {
+        //     targets: [11, 15, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28],
+        //     visible: false,
+        //   }
+        // ],
+        buttons: [
+            {
+              extend: 'copyHtml5',
+              exportOptions: {
+                columns: [ 0, ':visible' ]
+              }
+            },
+            {
+                extend: 'csvHtml5',
+                exportOptions: {
+                    columns: [ 0, ':visible' ]
+                }
+            },
+            {
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: [ 0, ':visible' ]
+                }
+            },
+            {
+                extend: 'colvis',
+                collectionLayout: 'fixed three-column'
+            },
+
+        ]
+    } );
+});
+</script>
+
+      <metal:content-core define-macro="content-core">
+        <!--<div tal:define="ryear view/getYear">
+          <form name="search_form"
+              action="search_cmo"
+              method="POST"
+              tal:define="years view/getYears">
+            Select year:
+            <select name="from">
+              <option tal:repeat="year years"
+                tal:attributes="name year;
+                            value year;
+                            selected python:'selected' if year == ryear else nothing"
+                tal:content="year"
+              />
+            </select>
+            <input class="btn btn-small searchPage searchButton allowMultiSubmit"
+                  type="submit"
+                  value="Search"
+            />
+          </form>
+          </div>
+        -->
+          <div tal:define="dates view/getDates">
+            <form name="search_form"
+                action="search_cmo"
+                method="POST">
+              Al menos una fecha debe ser indicada por omisión el inicio es: 01/01/1900 y el fin es la fecha actual
+              <br/>
+              <label for="from">Start Date:</label>
+              <input id="from" name="from" min="2015-01-01">
+
+              <br/>
+              <label for="to">End Date:</label>
+              <input id="to" name="to" class="date">
+
+              <br/>
+              <input class="btn btn-small searchPage searchButton allowMultiSubmit"
+                  type="submit"
+                  value="Search"
+              />
+
+            </form>
+
+            <hr/>
+            <tal:block tal:condition="python:dates['from'] or dates['to']">
+              <h1>Period: <br/>
+                Start Date: <span tal:content="dates/from"/> End Date: <span tal:content="dates/to"/>
+              </h1>
+
+              <tal:block tal:define="participants python:view.participants(dates);">
+                <table class="listing">
+                  <tr>
+                    <th>Number of participants in the period</th> <td tal:content="python:len(participants['rows'])"/>
+                  <tr>
+                </table>
+                <table id="participantstable" class="display nowrap" cellspacing="0" width="100%">
+                  <thead>
+                    <tr>
+                      <th>Number</th>
+                      <!-- <th>View/Edit</th> -->
+                      <tal:block tal:repeat="header participants/headers">
+                        <th i18n:translate="" tal:content="header"/>
+                      </tal:block>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr tal:repeat="row participants/rows">
+                      <td tal:content="repeat/row/number">number</td>
+                      <tal:block tal:repeat="column python:row[2:]">
+                        <td tal:content="column"/>
+                      </tal:block>
+                    </tr>
+                  </tbody>
+                </table>
+
+
+              </tal:block>
+            </tal:block>
+
+        </div>
+      </metal:content-core>
+    </metal:main>
+
+  </body>
+</html>

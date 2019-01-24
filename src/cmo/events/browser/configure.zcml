@@ -84,4 +84,12 @@
     layer="plone.app.contenttypes.interfaces.IPloneAppContenttypesLayer"
     permission="zope2.View"
   />
+  <!-- View for search -->
+  <browser:page
+    name="search_cmo"
+    template="templates/search_cmo.pt"
+    for="*"
+    class=".views.SearchView"
+    permission="zope2.View"
+  />
 </configure>
