@@ -58,25 +58,12 @@
       <script type="text/javascript" charset="utf-8">
   $(document).ready(function() {
     var table = $('#participantstable').DataTable( {
-        // "scrollY": "600px",
         "paging": false,
-        // "sScrollY": "600px",
-        // "bPaginate": false,
-        // "bScrollCollapse": true,
         "bAutoWidth": true,
-        // "info":     false,
         "searching": true,
         "sScrollX": "100%",
         "sScrollXInner": "100%",
-        //fixedHeader: true,
-        //responsive: true,
         dom: 'Bfrtip',
-        // columnDefs: [
-        //   {
-        //     targets: [11, 15, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28],
-        //     visible: false,
-        //   }
-        // ],
         buttons: [
             {
               extend: 'copyHtml5',
@@ -222,7 +209,6 @@
                   <thead>
                     <tr>
                       <th>Number</th>
-                      <!-- <th>View/Edit</th> -->
                       <tal:block tal:repeat="header participants/headers">
                         <th i18n:translate="" tal:content="header"/>
                       </tal:block>
