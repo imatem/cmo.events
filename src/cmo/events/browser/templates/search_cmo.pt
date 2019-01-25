@@ -60,7 +60,7 @@
     var table = $('#participantstable').DataTable( {
         "paging": false,
         "bAutoWidth": true,
-        "searching": true,
+        "searching": false,
         "sScrollX": "100%",
         "sScrollXInner": "100%",
         dom: 'Bfrtip',
@@ -98,7 +98,7 @@
             <form name="search_form"
                 action="search_cmo"
                 method="POST">
-              Al menos una fecha debe ser indicada por omisión el inicio es: 01/01/1900 y el fin es la fecha actual
+              At least one date must be indicated by default the start is: 01/01/1900 and the end is the current date <br/>
               <br/>
               <label for="from">Start Date:</label>
               <input id="from" name="from" min="2015-01-01">
