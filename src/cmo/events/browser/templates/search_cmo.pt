@@ -47,12 +47,14 @@
 
       }
     </style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
   </metal:css>
 
   <body>
 
     <!-- This view is in plone.app.dexterity.browser.container.pt -->
     <metal:main fill-slot="content-core">
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
       <script type="text/javascript" charset="utf-8">
   $(document).ready(function() {
     var table = $('#participantstable').DataTable( {
@@ -105,27 +107,6 @@
 </script>
 
       <metal:content-core define-macro="content-core">
-        <!--<div tal:define="ryear view/getYear">
-          <form name="search_form"
-              action="search_cmo"
-              method="POST"
-              tal:define="years view/getYears">
-            Select year:
-            <select name="from">
-              <option tal:repeat="year years"
-                tal:attributes="name year;
-                            value year;
-                            selected python:'selected' if year == ryear else nothing"
-                tal:content="year"
-              />
-            </select>
-            <input class="btn btn-small searchPage searchButton allowMultiSubmit"
-                  type="submit"
-                  value="Search"
-            />
-          </form>
-          </div>
-        -->
           <div tal:define="dates view/getDates">
             <form name="search_form"
                 action="search_cmo"
@@ -154,11 +135,89 @@
               </h1>
 
               <tal:block tal:define="participants python:view.participants(dates);">
+
                 <table class="listing">
                   <tr>
-                    <th>Number of participants in the period</th> <td tal:content="python:len(participants['rows'])"/>
+                    <td>Number of participants in the period</td> <td tal:content="python:len(participants['rows'])"/>
+                  </tr>
                   <tr>
+                    <td>Number of countries in the period</td> <td tal:content="python:len(participants['countries'].keys())"/>
+                  </tr>
+                  <tr>
+                    <td>Number of institutions in the period</td> <td tal:content="python:len(participants['institutions'].keys())"/>
+                  </tr>
                 </table>
+
+
+                <div class="container">
+                  <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#countries">View Countries Information</button>
+
+                  <div id="countries" class="collapse">
+                    <table class="listing">
+                      <thead>
+                        <tr>
+                          <th></th>
+                          <th>Country</th>
+                          <th>Number of participants</th>
+                        </tr>
+                      </thead>
+                      <tbody tal:define="countries python:participants['countries']">
+                        <tr tal:repeat="country python:sorted(countries.iterkeys())">
+                          <td tal:content="repeat/country/number" />
+                          <td tal:content="country"/>
+                          <td tal:content="python:countries[country]"/>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <br/><br/>
+                  <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#institutions">View Intitutions Information</button>
+
+                  <div id="institutions" class="collapse">
+                    <table class="listing">
+                      <thead>
+                        <tr>
+                          <th></th>
+                          <th>Institutions</th>
+                          <th>Number of participants</th>
+                        </tr>
+                      </thead>
+                      <tbody tal:define="institutions python:participants['institutions']">
+                        <tr tal:repeat="institution python:sorted(institutions.iterkeys())">
+                          <td tal:content="repeat/institution/number" />
+                          <td tal:content="institution"/>
+                          <td tal:content="python:institutions[institution]"/>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+
+                  <br/><br/>
+                  <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#genders">View Gender Information</button>
+
+                  <div id="genders" class="collapse">
+                    <table class="listing">
+                      <thead>
+                        <tr>
+                          <th>Type</th>
+                          <th>Number of participants</th>
+                        </tr>
+                      </thead>
+                      <tbody tal:define="genders python:participants['genders']">
+                        <tr tal:repeat="gender python:sorted(genders.iterkeys())">
+                          <td tal:content="gender"/>
+                          <td tal:content="python:genders[gender]"/>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div><!-- end container -->
+
+                <br/>
+
+
                 <table id="participantstable" class="display nowrap" cellspacing="0" width="100%">
                   <thead>
                     <tr>

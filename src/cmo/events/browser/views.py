@@ -67,13 +67,12 @@ class SearchView(BrowserView):
         participants = {
             'headers': [],
             'rows': [],
-            'participants_number': 0,
-            'countries_number': 0,
-            'institutions_number': 0,
-            'genders_number': 0,
+            'countries': {},
+            'institutions': {},
+            'genders': {},
         }
 
-        contries = {}
+        countries = {}
         institutions = {}
         genders = {}
 
@@ -87,6 +86,7 @@ class SearchView(BrowserView):
         )
 
         headers = []
+        names = []
         obj = api.content.find(portal_type='Participant')[0].getObject()
         viewitem = obj.unrestrictedTraverse('view')
         viewitem.update()
@@ -96,17 +96,16 @@ class SearchView(BrowserView):
         for widget in default_widgets:
             if widget.__name__ not in exclude_names:
                 headers.append(widget.label)
+                names.append(widget.__name__)
 
         groups = viewitem.groups
         for group in groups:
             widgetsg = group.widgets.values()
             for widget in widgetsg:
                 headers.append(widget.label)
+                names.append(widget.__name__)
 
         participants['headers'] = headers
-
-
-
 
         for workshop in workshops:
             obj = workshop.getObject()
@@ -114,29 +113,61 @@ class SearchView(BrowserView):
                 if participant.portal_type == 'Participant' and participant.attendance == u'Confirmed':
                     row = [participant.UID()]
                     row.append(participant.absolute_url())
-                    viewitem = participant.unrestrictedTraverse('view')
-                    viewitem.update()
-
-                    default_widgets = viewitem.widgets.values()
-                    groups = viewitem.groups
-
-                    for widget in default_widgets:
-                        if widget.__name__ not in exclude_names:
-                            row.append(widget.value)
-
-                    for group in groups:
-                        widgetsg = group.widgets.values()
-                        for widget in widgetsg:
-                            if widget.__name__ in['IAcommodation.hotel', 'IMembership.certificatesended', 'IMembership.certificaterequested']:
-                                row.append(','.join(widget.value))
-                            else:
-                                row.append(widget.value)
+                    for name in names:
+                        newname = name.split('.')[-1]
+                        value = getattr(participant, newname, None)
+                        row.append(value)
+                        if name == 'IPerson.country':
+                            countries.setdefault(value, 0)
+                            countries[value] += 1
+                        elif name == 'IPerson.affiliation':
+                            institutions.setdefault(value, 0)
+                            institutions[value] += 1
+                        elif name == 'IPerson.gender':
+                            genders.setdefault(value, 0)
+                            genders[value] += 1
 
                     participants['rows'].append(row)
+
+        # for workshop in workshops:
+        #     obj = workshop.getObject()
+        #     for participant in obj.listFolderContents():
+        #         if participant.portal_type == 'Participant' and participant.attendance == u'Confirmed':
+        #             row = [participant.UID()]
+        #             row.append(participant.absolute_url())
+        #             viewitem = participant.unrestrictedTraverse('view')
+        #             viewitem.update()
+
+        #             default_widgets = viewitem.widgets.values()
+        #             groups = viewitem.groups
+
+        #             for widget in default_widgets:
+        #                 if widget.__name__ not in exclude_names:
+        #                     row.append(widget.value)
+
+        #             for group in groups:
+        #                 widgetsg = group.widgets.values()
+        #                 for widget in widgetsg:
+        #                     if widget.__name__ in['IAcommodation.hotel', 'IMembership.certificatesended', 'IMembership.certificaterequested']:
+        #                         row.append(','.join(widget.value))
+        #                     else:
+        #                         row.append(widget.value)
+
+        #                     if widget.__name__ == 'IPerson.country':
+        #                         countries.setdefault(widget.value, 0)
+        #                         countries[widget.value] += 1
+
+        #                     if widget.__name__ == 'IPerson.affiliation':
+        #                         institutions.setdefault(widget.value, 0)
+        #                         institutions[widget.value] += 1
+
+        #                     if widget.__name__ == 'IPerson.gender':
+        #                         genders.setdefault(widget.value, 0)
+        #                         genders[widget.value] += 1
+
+        #             participants['rows'].append(row)
+
+        participants['countries'] = countries
+        participants['institutions'] = institutions
+        participants['genders'] = genders
         return participants
-
-
-
-
-
-
