@@ -101,7 +101,7 @@
               At least one date must be indicated by default the start is: 01/01/1900 and the end is the current date <br/>
               <br/>
               <label for="from">Start Date:</label>
-              <input id="from" name="from" min="2015-01-01">
+              <input id="from" name="from" min="2015-01-01" class="date">
 
               <br/>
               <label for="to">End Date:</label>
@@ -216,7 +216,7 @@
                   </thead>
                   <tbody>
                     <tr tal:repeat="row participants/rows">
-                      <td tal:content="repeat/row/number">number</td>
+                      <td><a tal:attributes="href python:row[1]"><span tal:content="repeat/row/number"/></a></td>
                       <tal:block tal:repeat="column python:row[2:]">
                         <td tal:content="column"/>
                       </tal:block>
