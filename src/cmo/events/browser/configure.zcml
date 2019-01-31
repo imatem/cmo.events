@@ -90,6 +90,6 @@
     template="templates/search_cmo.pt"
     for="*"
     class=".views.SearchView"
-    permission="zope2.View"
+    permission="cmf.AddPortalContent"
   />
 </configure>
