@@ -168,7 +168,7 @@ class ICertificate(Interface):
     bodydescription = schema.Text(
         title=_(u'label_cmo_certificate_description', u'Body Description'),
         required=False,
-        default=u'has attended the "$Workshop:title" workshop, held from $fancyDate, at Hotel Los Laureles, Oaxaca, Oax. Mexico.'
+        default=u'has attended the "$Workshop:title" workshop, held from $fancyDate, at Hotel Hacienda Los Laureles, Oaxaca, Oax. Mexico.'
     )
 
     signaturename = schema.Text(
