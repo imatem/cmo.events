@@ -262,7 +262,10 @@ class WorkshopView(WidgetsView):
                 kargs['workshop'] = item['Workshop']
                 for d in ['arrival_date', 'replied_at', 'departure_date']:
                     if kargs[d] is not None and kargs[d] != '0000-00-00 00:00:00':
-                        kargs[d] = datetime.strptime(kargs[d], '%Y-%m-%d %H:%M:%S')  # noqa
+                        try:
+                            kargs[d] = datetime.strptime(kargs[d], '%Y-%m-%d %H:%M:%S')  # noqa
+                        except Exception:
+                            del kargs[d]
                     else:
                         del kargs[d]
 
