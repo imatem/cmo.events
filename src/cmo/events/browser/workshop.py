@@ -41,6 +41,7 @@ class WorkshopView(WidgetsView):
         # add_resource_on_request(self.request, 'tablecmo')
         if self.request.form:
             self.handle_update_participants()
+            self.handle_update_participants2()
 
         return super(WorkshopView, self).__call__()
 
@@ -249,6 +250,60 @@ class WorkshopView(WidgetsView):
             self.update_participants(req.json())
             api.portal.show_message(_(u'Updated!'), self.request, type=u'info')
         logger.info('Done.')
+
+    def handle_update_participants2(self):
+        """Update participants list from Birs API
+        """
+        logger.info('Updating participants for {0}'.format(self.context.id))
+        # TO DO: Change url configuration
+        birs_uri = 'cmo.birs_api_uri'
+        email_autho = 'email'
+        passwd_autho = 'passwd'
+
+
+        try:
+            token = requests.post(
+                birs_uri,
+                headers={
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                json={'api_user': {'email': email_autho, 'password': passwd_autho}},
+            )
+
+            jwt = 'Bearer ' + token.json()['jwt']
+            workshop_number = self.context.id
+
+
+            birs_url_event = 'url/events/%s/memberships.json' %(workshop_number)
+            req = requests.get(
+                birs_url_event,
+                headers={'Accept': 'application/json', 'Authorization': jwt})
+            req.raise_for_status()
+        except (ConnectionError, HTTPError) as err:
+            api.portal.show_message(err, self.request, type=u'error')
+        else:
+
+            self.update_participants2(req.json())
+            api.portal.show_message(_(u'Updated!'), self.request, type=u'info')
+        logger.info('Done.')
+
+    def update_participants2(self, json_data):
+
+        # inbirsnotincmo =[
+        #     ''
+        # ]
+        newparticipants = []
+
+        for attendance, participant in json_data.itertems():
+            userid = idnormalizer.normalize(participant['person']['email'])
+            if userid not in self.context:
+                kargs = dict(participant['person'])
+                kargs.update(participant['membership'])
+                kargs['workshop'] = self.context.id
+
+
+        return True
 
     def update_participants(self, json_data):
         """Update participants list
