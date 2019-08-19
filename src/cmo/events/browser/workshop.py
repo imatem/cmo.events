@@ -238,14 +238,13 @@ class WorkshopView(WidgetsView):
         """Update participants list from Birs API
         """
         logger.info('Updating participants for {0}'.format(self.context.id))
-        # TO DO: Change url configuration
-        birs_uri = 'cmo.birs_api_uri'
-        email_autho = 'email'
-        passwd_autho = 'passwd'
+        birs_uri = api.portal.get_registry_record('cmo.birs_api_uri')
+        email_autho = api.portal.get_registry_record('cmo.birs_api_user')
+        passwd_autho = api.portal.get_registry_record('cmo.birs_api_password')
 
         try:
             token = requests.post(
-                birs_uri,
+                birs_uri + '/api/login.json',
                 headers={
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
@@ -256,7 +255,8 @@ class WorkshopView(WidgetsView):
             jwt = 'Bearer ' + token.json()['jwt']
             workshop_number = self.context.id
 
-            birs_url_event = 'url/events/%s/memberships.json' % (workshop_number)
+
+            birs_url_event = '%s/events/%s/memberships.json' % (birs_uri, workshop_number)
             req = requests.get(
                 birs_url_event,
                 headers={'Accept': 'application/json', 'Authorization': jwt})
