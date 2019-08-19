@@ -53,18 +53,37 @@ class UpdateWorkshopsForm(form.Form):
 
     @button.buttonAndHandler(_(u'Update Workshops'))
     def handle_update_workshops(self, action):
-        """Update workshops list from Birs API
+        """Update workshops list from NEW Birs API
         """
         logger.info('Updating Workshops')
         data, errors = self.extractData()
         year = data['year']
-        birs_uri = api.portal.get_registry_record('cmo.birs_api_uri')
+
+        # TO DO: Change url configuration
+        birs_uri = 'cmo.birs_api_uri'
+        email_autho = 'email'
+        passwd_autho = 'passwd'
+
         if birs_uri is None:
             api.portal.show_message(_(u'CMO Settings: No Birs API defined!'), self.request, type=u'error')
             return
-        url = '/'.join([birs_uri, 'event_data_for_year', year])
+
+        url = 'url/events/year/%s/location/EO.json' % (year)
+
         try:
-            req = requests.get(url)
+            token = requests.post(
+                birs_uri,
+                headers={
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                json={'api_user': {'email': email_autho, 'password': passwd_autho}},
+            )
+
+            jwt = 'Bearer ' + token.json()['jwt']
+            req = requests.get(
+                url,
+                headers={'Accept': 'application/json', 'Authorization': jwt})
             req.raise_for_status()
         except (ConnectionError, HTTPError) as err:
             api.portal.show_message(err, self.request, type=u'error')
@@ -72,6 +91,7 @@ class UpdateWorkshopsForm(form.Form):
             self.update_workshops(year, req.json())
             api.portal.show_message(_(u'Updated!'), self.request, type=u'info')
         logger.info('Done.')
+
 
     def update_workshops(self, year, json_data):
         """Update workshops for year
@@ -86,7 +106,8 @@ class UpdateWorkshopsForm(form.Form):
             if item['code'] not in folder:
                 item['start_date'] = datetime.strptime(item['start_date'], '%Y-%m-%d')  # noqa
                 item['end_date'] = datetime.strptime(item['end_date'], '%Y-%m-%d')  # noqa
-                item['max_participants'] = int(item['max_participants'])
+                # item['max_participants'] = int(item['max_participants'])
+                item['max_participants'] = int(item.get('max_participants', '0'))
                 workshop = api.content.create(
                     type='Workshop',
                     id=item['code'],
@@ -103,9 +124,6 @@ class UpdateWorkshopsForm(form.Form):
                     container=workshop,
                     ctemplate=api.content.get_uuid(obj=template))
 
-                # update participants from MYSQL database
-                # workshopview = getMultiAdapter((workshop, self.request), name='update-participants')
-                # workshopview.handle_update_participants_db(workshopview, '')
 
     # @button.buttonAndHandler(_(u'Update Workshops from DB'))
     def handle_update_workshops_db(self, action):
