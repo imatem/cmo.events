@@ -13,6 +13,16 @@ class ICMOControlPanel(Interface):
         required=False,
     )
 
+    birs_api_user = schema.TextLine(
+        title=u'Birs API user',
+        required=False,
+    )
+
+    birs_api_password = schema.Password(
+        title=u'Birs API password',
+        required=False,
+    )
+
 
 class CMOControlPanelForm(RegistryEditForm):
     schema = ICMOControlPanel
