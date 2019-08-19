@@ -281,9 +281,9 @@ class WorkshopView(WidgetsView):
                     kargs = dict(participant['person'])
                     kargs.update(participant['membership'])
                     kargs['workshop'] = self.context.id
-                    # kargs['attendance'] = attendance
                     kargs['event_notes'] = participant['membership']['staff_notes']
-                    for d in ['arrival_date', 'updated_at', 'departure_date']:
+                    kargs['off_site'] = participant['membership']['own_accommodation']
+                    for d in ['arrival_date', 'replied_at', 'departure_date']:
                         if kargs[d] is not None and kargs[d] != '0000-00-00 00:00:00':
                             try:
                                 kargs[d] = datetime.strptime(kargs[d], '%Y-%m-%d %H:%M:%S')  # noqa
@@ -315,9 +315,7 @@ class WorkshopView(WidgetsView):
                     obj.academic_status = participant['person']['academic_status']
                     obj.attendance = participant['membership']['attendance']
                     # obj.replied_at = participant['membership']['replied_at']
-                    obj.replied_at = participant['membership']['updated_at']
-                    # obj.special_info = participant['membership']['special_info']
-                    # obj.event_notes = participant['membership']['event_notes']
+                    obj.special_info = participant['membership']['special_info']
                     obj.event_notes = participant['membership']['staff_notes']
                     obj.reindexObject()
         if newparticipants:
