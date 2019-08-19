@@ -58,7 +58,7 @@
     name="cmo-controlpanel"
     for="Products.CMFPlone.interfaces.IPloneSiteRoot"
     class=".controlpanel.CMOControlPanelView"
-    permission="cmf.ManagePortal"
+    permission="cmf.AddPortalContent"
     />
 
   <browser:page
