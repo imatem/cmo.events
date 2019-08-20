@@ -10,7 +10,6 @@ from plone.i18n.normalizer import idnormalizer
 from requests.exceptions import ConnectionError
 from requests.exceptions import HTTPError
 from zope.component import getUtility
-from collections import OrderedDict
 
 
 import logging
@@ -19,7 +18,7 @@ import requests
 
 logger = logging.getLogger('Plone')
 
-FIELDS_ORDER = [
+COLUMN_ORDER = [
     u'label_cmo_workshop',
     u'label_cmo_firstname',
     u'label_cmo_lastname',
@@ -187,9 +186,9 @@ class WorkshopView(WidgetsView):
         return participants
 
     def positionlabelfield(self, labelfield):
-        if labelfield not in FIELDS_ORDER:
+        if labelfield not in COLUMN_ORDER:
             return -1
-        return FIELDS_ORDER.index(labelfield)
+        return COLUMN_ORDER.index(labelfield)
 
     def participantsWithcolumnOrder(self, attendance=[]):
 
