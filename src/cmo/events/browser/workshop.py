@@ -242,6 +242,7 @@ class WorkshopView(WidgetsView):
         email_autho = api.portal.get_registry_record('cmo.birs_api_user')
         passwd_autho = api.portal.get_registry_record('cmo.birs_api_password')
 
+
         try:
             token = requests.post(
                 birs_uri + '/api/login.json',
@@ -275,15 +276,23 @@ class WorkshopView(WidgetsView):
 
         for attendance, participants in json_data.iteritems():
             for participant in participants:
-
                 userid = idnormalizer.normalize(participant['person']['email'])
                 if userid not in self.context:
                     kargs = dict(participant['person'])
+
+                    kargs['birs_person_id'] = participant['person']['id']
+                    kargs['birs_title'] = participant['person']['title']
+                    kargs['person_updated_by'] = participant['person']['updated_by']
+                    kargs['person_updated_at'] = participant['person']['updated_at']
                     kargs.update(participant['membership'])
                     kargs['workshop'] = self.context.id
+                    kargs['birs_membership_id'] = participant['membership']['id']
                     kargs['event_notes'] = participant['membership']['staff_notes']
+                    kargs['membership_updated_by'] = participant['membership']['updated_by']
+                    kargs['membership_updated_at'] = participant['membership']['updated_at']
                     kargs['off_site'] = participant['membership']['own_accommodation']
-                    for d in ['arrival_date', 'replied_at', 'departure_date']:
+
+                    for d in ['arrival_date', 'replied_at', 'departure_date', 'person_updated_by', 'person_updated_at', 'membership_updated_by', 'membership_updated_at']:
                         if kargs[d] is not None and kargs[d] != '0000-00-00 00:00:00':
                             try:
                                 kargs[d] = datetime.strptime(kargs[d], '%Y-%m-%d %H:%M:%S')  # noqa
