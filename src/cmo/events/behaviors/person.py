@@ -25,7 +25,7 @@ class IPerson(model.Schema):
         #     u''
         # ),
         fields=[
-            'birs_id',
+            'birs_person_id',
             'lastname',
             'firstname',
             'salutation',
@@ -49,16 +49,16 @@ class IPerson(model.Schema):
             'phd_year',
             'biography',
             'research_areas',
-            'updated_by',
-            'updated_at',
+            'person_updated_by',
+            'person_updated_at',
             'grant_id',
         ]
     )
 
-    birs_id = firstname = schema.TextLine(
+    birs_person_id = firstname = schema.TextLine(
         title=_(
-            u'label_cmo_birs_id',
-            default=u'Birs Id'
+            u'label_cmo_birs_person_id',
+            default=u'Birs Person Id'
         ),
         required=False,
     )
@@ -248,7 +248,7 @@ class IPerson(model.Schema):
         required=False,
     )
 
-    updated_by = schema.TextLine(
+    person_updated_by = schema.TextLine(
         title=_(
             u'label_cmo_updated_by',
             default=u'Updated by'
@@ -256,7 +256,7 @@ class IPerson(model.Schema):
         required=False,
     )
 
-    updated_at = schema.TextLine(
+    person_updated_at = schema.TextLine(
         title=_(
             u'label_cmo_updated_at',
             default=u'Updated at'
