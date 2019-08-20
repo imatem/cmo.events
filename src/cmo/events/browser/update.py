@@ -62,12 +62,13 @@ class UpdateWorkshopsForm(form.Form):
         birs_uri = api.portal.get_registry_record('cmo.birs_api_uri')
         email_autho = api.portal.get_registry_record('cmo.birs_api_user')
         passwd_autho = api.portal.get_registry_record('cmo.birs_api_password')
+        birs_location = api.portal.get_registry_record('cmo.birs_location')
 
         if birs_uri is None:
             api.portal.show_message(_(u'CMO Settings: No Birs API defined!'), self.request, type=u'error')
             return
 
-        url = '%s/events/year/%s/location/EO.json' % (birs_uri, year)
+        url = '%s/events/year/%s/location/%s.json' % (birs_uri, year, birs_location)
 
         try:
             token = requests.post(

@@ -9,8 +9,8 @@ from zope.interface import Interface
 class ICMOControlPanel(Interface):
 
     birs_api_uri = schema.URI(
-        title=u'Birs API',
-        required=False,
+        title=u'Birs API url',
+        required=True,
     )
 
     birs_api_user = schema.TextLine(
@@ -21,6 +21,11 @@ class ICMOControlPanel(Interface):
     birs_api_password = schema.Password(
         title=u'Birs API password',
         required=False,
+    )
+
+    birs_location = schema.TextLine(
+        title=u'Birs location',
+        required=True,
     )
 
 
