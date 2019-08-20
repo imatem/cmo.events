@@ -12,10 +12,75 @@ from requests.exceptions import HTTPError
 from zope.component import getUtility
 from collections import OrderedDict
 
+
 import logging
 import requests
 
+
 logger = logging.getLogger('Plone')
+
+FIELDS_ORDER = [
+    u'label_cmo_workshop',
+    u'label_cmo_firstname',
+    u'label_cmo_lastname',
+    u'label_cmo_affiliation',
+    u'label_cmo_year',
+    u'label_cmo_attendance',
+    u'label_cmo_email',
+    u'label_cmo_role',
+    u'label_cmo_hotel',
+    u'label_cmo_externalHotel',
+    u'label_cmo_arrival',
+    u'label_cmo_departure',
+    u'label_cmo_hasguest',
+    u'label_cmo_nameGuest',
+    u'label_cmo_specialInfo',
+    u'label_cmo_gender',
+    u'label_cmo_country',
+    u'label_cmo_status',
+    u'label_cmo_grade',
+    u'label_cmo_phone',
+    u'label_cmo_webpage',
+    u'label_cmo_replied',
+    u'label_cmo_offsite',
+    u'label_cmo_eventNotes',
+    u'label_cmo_visa',
+    u'label_cmo_certificatesended',
+    u'label_cmo_certificaterequested',
+    u'label_cmo_birs_person_id',
+    u'label_cmo_birs_person_id',
+    u'label_cmo_emergency_contact',
+    u'label_cmo_emergency_phone',
+    u'label_cmo_department',
+    u'label_cmo_birs_title',
+    u'label_cmo_address1',
+    u'label_cmo_address2',
+    u'label_cmo_address3',
+    u'label_cmo_city',
+    u'label_cmo_region',
+    u'label_cmo_postal_code',
+    u'label_cmo_biography',
+    u'label_cmo_research_areas',
+    u'label_cmo_updated_by',
+    u'label_cmo_updated_at',
+    u'label_cmo_grant_id',
+    u'label_cmo_birs_membership_id',
+    u'label_cmo_event_id',
+    u'label_cmo_person_id',
+    u'label_cmo_share_email',
+    u'label_cmo_membership_updated_by',
+    u'label_cmo_membership_updated_at',
+    u'label_cmo_guest_disclaimer',
+    u'label_cmo_billing',
+    u'label_cmo_reviewed',
+    u'label_cmo_room',
+    u'label_cmo_invited_by',
+    u'label_cmo_invited_on',
+    u'label_cmo_share_email_hotel',
+    u'label_cmo_room_notes',
+    u'label_cmo_certificatesended',
+    u'label_cmo_acommodationInformation',
+]
 
 
 class WorkshopView(WidgetsView):
@@ -122,63 +187,9 @@ class WorkshopView(WidgetsView):
         return participants
 
     def positionlabelfield(self, labelfield):
-        orderfields = OrderedDict()
-        # orderfields[u'label_cmo_workshop'] = 0
-        # orderfields[u'label_cmo_firstname'] = 1
-        # orderfields[u'label_cmo_lastname'] = 2
-        # orderfields[u'label_cmo_affiliation'] = 3
-        # orderfields[u'label_cmo_year'] = 4
-        # orderfields[u'label_cmo_attendance'] = 5
-        # orderfields[u'label_cmo_email'] = 6
-        # orderfields[u'label_cmo_role'] = 7
-        # orderfields[u'label_cmo_hotel'] = 8
-        # orderfields[u'label_cmo_externalHotel'] = 9
-        # orderfields[u'label_cmo_arrival'] = 10
-        # orderfields[u'label_cmo_departure'] = 11
-        # orderfields[u'label_cmo_hasguest'] = 12
-        # orderfields[u'label_cmo_nameGuest'] = 13
-        # orderfields[u'label_cmo_specialInfo'] = 14
-        # orderfields[u'label_cmo_gender'] = 15
-        # orderfields[u'label_cmo_country'] = 16
-        # orderfields[u'label_cmo_status'] = 17
-        # orderfields[u'label_cmo_grade'] = 18
-        # orderfields[u'label_cmo_phone'] = 19
-        # orderfields[u'label_cmo_webpage'] = 20
-        # orderfields[u'label_cmo_replied'] = 21
-        # orderfields[u'label_cmo_offsite'] = 22
-        # orderfields[u'label_cmo_eventNotes'] = 23
-        # orderfields[u'label_cmo_visa'] = 24
-        # orderfields[u'label_cmo_certificatesended'] = 25
-        # orderfields[u'label_cmo_certificaterequested'] = 26
-
-        orderfields[u'label_cmo_workshop'] = 0
-        orderfields[u'label_cmo_firstname'] = 1
-        orderfields[u'label_cmo_lastname'] = 2
-        orderfields[u'label_cmo_email'] = 6
-        orderfields[u'label_cmo_country'] = 16
-        orderfields[u'label_cmo_gender'] = 15
-        orderfields[u'label_cmo_affiliation'] = 3
-        orderfields[u'label_cmo_grade'] = 18
-        orderfields[u'label_cmo_webpage'] = 20
-        orderfields[u'label_cmo_phone'] = 19
-        orderfields[u'label_cmo_year'] = 4
-        orderfields[u'label_cmo_status'] = 17
-        orderfields[u'label_cmo_arrival'] = 10
-        orderfields[u'label_cmo_departure'] = 11
-        orderfields[u'label_cmo_attendance'] = 5
-        orderfields[u'label_cmo_role'] = 7
-        orderfields[u'label_cmo_replied'] = 21
-        orderfields[u'label_cmo_hasguest'] = 12
-        orderfields[u'label_cmo_specialInfo'] = 14
-        orderfields[u'label_cmo_offsite'] = 22
-        orderfields[u'label_cmo_eventNotes'] = 23
-        orderfields[u'label_cmo_certificatesended'] = 25
-        orderfields[u'label_cmo_certificaterequested'] = 26
-        orderfields[u'label_cmo_hotel'] = 8
-        orderfields[u'label_cmo_visa'] = 24
-        orderfields[u'label_cmo_externalHotel'] = 9
-        orderfields[u'label_cmo_nameGuest'] = 13
-        return orderfields.get(labelfield, -1)
+        if labelfield not in FIELDS_ORDER:
+            return -1
+        return FIELDS_ORDER.index(labelfield)
 
     def participantsWithcolumnOrder(self, attendance=[]):
 
