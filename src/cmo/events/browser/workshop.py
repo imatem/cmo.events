@@ -11,7 +11,6 @@ from requests.exceptions import ConnectionError
 from requests.exceptions import HTTPError
 from zope.component import getUtility
 
-
 import logging
 import requests
 
@@ -28,11 +27,11 @@ COLUMN_ORDER = [
     u'label_cmo_email',
     u'label_cmo_role',
     u'label_cmo_hotel',
-    u'label_cmo_externalHotel',
+    u'label_cmo_externalHotel',  # OJO
     u'label_cmo_arrival',
     u'label_cmo_departure',
     u'label_cmo_hasguest',
-    u'label_cmo_nameGuest',
+    u'label_cmo_nameGuest',   # OJO
     u'label_cmo_specialInfo',
     u'label_cmo_gender',
     u'label_cmo_country',
@@ -46,7 +45,6 @@ COLUMN_ORDER = [
     u'label_cmo_visa',
     u'label_cmo_certificatesended',
     u'label_cmo_certificaterequested',
-    u'label_cmo_birs_person_id',
     u'label_cmo_birs_person_id',
     u'label_cmo_emergency_contact',
     u'label_cmo_emergency_phone',
@@ -77,8 +75,6 @@ COLUMN_ORDER = [
     u'label_cmo_invited_on',
     u'label_cmo_share_email_hotel',
     u'label_cmo_room_notes',
-    u'label_cmo_certificatesended',
-    u'label_cmo_acommodationInformation',
 ]
 
 
