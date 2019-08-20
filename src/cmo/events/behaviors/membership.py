@@ -21,18 +21,57 @@ class IMembership(model.Schema):
             u'Membership'
         ),
         fields=[
+            'birs_membership_id',
+            'event_id',
+            'person_id',
             'arrival_date',
             'departure_date',
-            'attendance',
             'role',
-            'replied_at',
-            'has_guest',
-            'special_info',
-            'off_site',
+            'attendance',
+            'share_email',
             'event_notes',
+            'membership_updated_by',
+            'membership_updated_at',
+            'off_site',
+            'has_guest',
+            'guest_disclaimer',
+            'special_info',
+            'billing',
+            'reviewed',
+            'room',
+            'invited_by',
+            'invited_on',
+            'share_email_hotel',
+            'room_notes',
+            'replied_at',
             'certificatesended',
             'certificaterequested',
         ]
+    )
+
+    # id
+    birs_membership_id = schema.TextLine(
+        title=_(
+            u'label_cmo_birs_membership_id',
+            default=u'Birs Membership Id'
+        ),
+        required=False,
+    )
+
+    event_id = schema.TextLine(
+        title=_(
+            u'label_cmo_event_id',
+            default=u'Event Id'
+        ),
+        required=False,
+    )
+
+    person_id = schema.TextLine(
+        title=_(
+            u'label_cmo_person_id',
+            default=u'Person Id'
+        ),
+        required=False,
     )
 
     arrival_date = schema.TextLine(
@@ -50,13 +89,7 @@ class IMembership(model.Schema):
         ),
         required=False,
     )
-    attendance = schema.TextLine(
-        title=_(
-            u'label_cmo_attendance',
-            default=u'Attendance'
-        ),
-        required=False,
-    )
+
     role = schema.TextLine(
         title=_(
             u'label_cmo_role',
@@ -64,10 +97,55 @@ class IMembership(model.Schema):
         ),
         required=False,
     )
-    replied_at = schema.TextLine(
+
+    attendance = schema.TextLine(
         title=_(
-            u'label_cmo_replied',
-            default=u'Replied At'
+            u'label_cmo_attendance',
+            default=u'Attendance'
+        ),
+        required=False,
+    )
+
+    share_email = schema.TextLine(
+        title=_(
+            u'label_cmo_share_email',
+            default=u'Share Email'
+        ),
+        required=False,
+    )
+
+    # This is staff_notes
+    event_notes = schema.TextLine(
+        title=_(
+            u'label_cmo_eventNotes',
+            default=u'Event Notes'
+        ),
+        required=False,
+    )
+
+    # updated_by
+    membership_updated_by = schema.TextLine(
+        title=_(
+            u'label_cmo_membership_updated_by',
+            default=u'Membership Updated by'
+        ),
+        required=False,
+    )
+
+    # updated_at
+    membership_updated_at = schema.TextLine(
+        title=_(
+            u'label_cmo_membership_updated_at',
+            default=u'Membership Updated at'
+        ),
+        required=False,
+    )
+
+    # own_accommodation
+    off_site = schema.TextLine(
+        title=_(
+            u'label_cmo_offsite',
+            default=u'Offsite'
         ),
         required=False,
     )
@@ -80,6 +158,14 @@ class IMembership(model.Schema):
         required=False,
     )
 
+    guest_disclaimer = schema.TextLine(
+        title=_(
+            u'label_cmo_guest_disclaimer',
+            default=u'Guest Disclaimer'
+        ),
+        required=False,
+    )
+
     special_info = schema.TextLine(
         title=_(
             u'label_cmo_specialInfo',
@@ -88,18 +174,66 @@ class IMembership(model.Schema):
         required=False,
     )
 
-    off_site = schema.TextLine(
+    billing = schema.TextLine(
         title=_(
-            u'label_cmo_offsite',
-            default=u'Offsite'
+            u'label_cmo_billing',
+            default=u'Billing'
         ),
         required=False,
     )
 
-    event_notes = schema.TextLine(
+    reviewed = schema.TextLine(
         title=_(
-            u'label_cmo_eventNotes',
-            default=u'Event Notes'
+            u'label_cmo_reviewed',
+            default=u'Reviewed'
+        ),
+        required=False,
+    )
+
+    room = schema.TextLine(
+        title=_(
+            u'label_cmo_room',
+            default=u'Room'
+        ),
+        required=False,
+    )
+
+    invited_by = schema.TextLine(
+        title=_(
+            u'label_cmo_invited_by',
+            default=u'Invited By'
+        ),
+        required=False,
+    )
+
+    invited_on = schema.TextLine(
+        title=_(
+            u'label_cmo_invited_on',
+            default=u'Invited on'
+        ),
+        required=False,
+    )
+
+    share_email_hotel = schema.TextLine(
+        title=_(
+            u'label_cmo_share_email_hotel',
+            default=u'Share Email Hotel'
+        ),
+        required=False,
+    )
+
+    room_notes = schema.TextLine(
+        title=_(
+            u'label_cmo_room_notes',
+            default=u'Room Notes'
+        ),
+        required=False,
+    )
+
+    replied_at = schema.TextLine(
+        title=_(
+            u'label_cmo_replied',
+            default=u'Replied At'
         ),
         required=False,
     )
