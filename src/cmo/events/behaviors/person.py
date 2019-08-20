@@ -55,6 +55,7 @@ class IPerson(model.Schema):
         ]
     )
 
+    # id
     birs_person_id = firstname = schema.TextLine(
         title=_(
             u'label_cmo_birs_person_id',
@@ -152,6 +153,7 @@ class IPerson(model.Schema):
         required=False,
     )
 
+    # title
     birs_title = schema.TextLine(
         title=_(
             u'label_cmo_birs_title',
@@ -248,6 +250,7 @@ class IPerson(model.Schema):
         required=False,
     )
 
+    # updated_by
     person_updated_by = schema.TextLine(
         title=_(
             u'label_cmo_updated_by',
@@ -256,6 +259,7 @@ class IPerson(model.Schema):
         required=False,
     )
 
+    # updated_at
     person_updated_at = schema.TextLine(
         title=_(
             u'label_cmo_updated_at',
