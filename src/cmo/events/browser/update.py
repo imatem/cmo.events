@@ -38,7 +38,7 @@ class IMyForm(model.Schema):
 
     year = schema.Choice(
         title=_(u'Year'),
-        values=[u'2015', u'2016', u'2017', u'2018', u'2019'],
+        values=[u'2015', u'2016', u'2017', u'2018', u'2019', u'2020'],
         required=False,
     )
 
