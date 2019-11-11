@@ -184,6 +184,7 @@ class UpdateWorkshopsForm(form.Form):
 class UpdateParticipantsForm(form.Form):
     """Update Participants lists."""
 
+    @deprecate('Old method is no longer supported, use workshop.handle_update_participants instead.')
     @button.buttonAndHandler(_(u'Update Participants'))
     def handle_update_participants(self, action):
         """Update participants list from Birs API
@@ -204,6 +205,7 @@ class UpdateParticipantsForm(form.Form):
             api.portal.show_message(_(u'Updated!'), self.request, type=u'info')
         logger.info('Done.')
 
+    @deprecate('Old method is no longer supported, use workshop.update_participants instead.')
     def update_participants(self, json_data):
         """Update participants list
         """
