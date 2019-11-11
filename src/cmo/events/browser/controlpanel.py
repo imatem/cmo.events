@@ -12,7 +12,7 @@ class ICMOControlPanel(Interface):
     birs_api_uri = schema.URI(
         title=_(
             u'label_birs_api_url',
-            default=u'BIRS whorkshops API url'),
+            default=u'BIRS workshops API url'),
         description=_(
             u'help_birs_api_url',
             default=u'e.g. https://staging.birs.ca'),
@@ -23,11 +23,11 @@ class ICMOControlPanel(Interface):
     birs_api_user = schema.TextLine(
         title=_(
             u'label_birs_api_user',
-            default=u'BIRS whorkshops API user'),
+            default=u'BIRS workshops API user'),
         description=_(
             u'help_birs_api_user',
             default=u'Username for authentication '
-                    u'to the BIRS whorkshops API'),
+                    u'to the BIRS workshops API'),
         default=None,
         required=False,
     )
@@ -38,7 +38,7 @@ class ICMOControlPanel(Interface):
             default=u'BIRS API password'),
         description=_(
             u'help_birs_api_pass',
-            default=u'The password for the BIRS whorkshops API '
+            default=u'The password for the BIRS workshops API '
                     u'user account.'),
         default=None,
         required=False)
