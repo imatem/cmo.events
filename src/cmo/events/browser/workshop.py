@@ -248,6 +248,15 @@ class WorkshopView(WidgetsView):
         email_autho = api.portal.get_registry_record('cmo.birs_api_user')
         passwd_autho = api.portal.get_registry_record('cmo.birs_api_password')
 
+        if birs_uri is None:
+            api.portal.show_message(_(u'CMO Settings: No BIRS workshops API URL defined!'), self.request, type=u'error')
+            return
+        if email_autho is None:
+            api.portal.show_message(_(u'CMO Settings: No BIRS workshops API user defined!'), self.request, type=u'error')
+            return
+        if passwd_autho is None:
+            api.portal.show_message(_(u'CMO Settings: No BIRS API password defined!'), self.request, type=u'error')
+            return
 
         try:
             token = requests.post(
@@ -258,11 +267,9 @@ class WorkshopView(WidgetsView):
                 },
                 json={'api_user': {'email': email_autho, 'password': passwd_autho}},
             )
-
+            token.raise_for_status()
             jwt = 'Bearer ' + token.json()['jwt']
             workshop_number = self.context.id
-
-
             birs_url_event = '%s/events/%s/memberships.json' % (birs_uri, workshop_number)
             req = requests.get(
                 birs_url_event,
