@@ -84,7 +84,7 @@ class UpdateWorkshopsForm(form.Form):
             return
 
         url = '%s/events/year/%s/location/%s.json' % (birs_uri, year, birs_location)
-        import pdb; pdb.set_trace()
+
         try:
             token = requests.post(
                 birs_uri + '/api/login.json',
@@ -226,6 +226,7 @@ class UpdateParticipantsForm(form.Form):
                     **kargs)
 
     # @button.buttonAndHandler(_(u'Update Participants from DB'))
+    @deprecate('Old method is no longer supported, use handle_update_participants instead.')
     def handle_update_participants_db(self, action):
         """Update participants list from CIMAT db
         """
@@ -247,6 +248,7 @@ class UpdateParticipantsForm(form.Form):
             api.portal.show_message(_(u'Updated!'), self.request, type=u'info')
         logger.info('Done.')
 
+    @deprecate('Old method is no longer supported, used for handle_update_participants_db.')
     def person_to_birs(self, data):
         """Returns a workshop with birs api format
         """
@@ -298,6 +300,6 @@ class UpdateParticipantsForm(form.Form):
                 'visa': data['visa'],
                 'nameGuest': data['acompaname'],
                 'hotel': string.capwords(data['hotel']) or None,
-            }
+            },
         }
         return person
