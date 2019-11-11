@@ -68,12 +68,12 @@
     permission="cmf.AddPortalContent"
   />
 
-  <browser:page
+<!--   <browser:page
     name="update-participants"
     for="cmo.events.interfaces.IWorkshop"
     class=".update.UpdateParticipantsForm"
     permission="cmf.AddPortalContent"
-  />
+  /> -->
 
   <!-- View for folder -->
   <browser:page
