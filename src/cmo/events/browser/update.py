@@ -12,8 +12,9 @@ from z3c.form import button
 from z3c.form import field
 from z3c.form import form
 from zope import schema
+from zope.deprecation import deprecate
+from zope.deprecation import deprecated
 
-# from zope.component import getMultiAdapter
 import logging
 import requests
 import string
@@ -26,19 +27,21 @@ except Exception as e:
 
 logger = logging.getLogger('Plone')
 
+
 config = {
     'user': 'user',
     'password': 'some_password',
     'host': '192.168.33.1',
-    'database': 'databasename'
+    'database': 'databasename',
 }
+config = deprecated(config, 'config is no more, used with CIMAT db')
 
 
 class IMyForm(model.Schema):
 
     year = schema.Choice(
         title=_(u'Year'),
-        values=[u'2015', u'2016', u'2017', u'2018', u'2019'],
+        values=[u'2015', u'2016', u'2017', u'2018', u'2019', u'2020'],
         required=False,
     )
 
@@ -65,11 +68,23 @@ class UpdateWorkshopsForm(form.Form):
         birs_location = api.portal.get_registry_record('cmo.birs_location')
 
         if birs_uri is None:
-            api.portal.show_message(_(u'CMO Settings: No Birs API defined!'), self.request, type=u'error')
+            api.portal.show_message(_(u'CMO Settings: No BIRS workshops API URL defined!'), self.request, type=u'error')
+            return
+        if email_autho is None:
+            api.portal.show_message(_(u'CMO Settings: No BIRS workshops API user defined!'), self.request, type=u'error')
+            return
+        if passwd_autho is None:
+            api.portal.show_message(_(u'CMO Settings: No BIRS API password defined!'), self.request, type=u'error')
+            return
+        if birs_location is None:
+            api.portal.show_message(_(u'CMO Settings: No BIRS events location defined!'), self.request, type=u'error')
+            return
+        if year is None:
+            api.portal.show_message(_(u'Select a year to update'), self.request, type=u'error')
             return
 
         url = '%s/events/year/%s/location/%s.json' % (birs_uri, year, birs_location)
-
+        import pdb; pdb.set_trace()
         try:
             token = requests.post(
                 birs_uri + '/api/login.json',
@@ -79,7 +94,7 @@ class UpdateWorkshopsForm(form.Form):
                 },
                 json={'api_user': {'email': email_autho, 'password': passwd_autho}},
             )
-
+            token.raise_for_status()
             jwt = 'Bearer ' + token.json()['jwt']
             req = requests.get(
                 url,
@@ -90,8 +105,7 @@ class UpdateWorkshopsForm(form.Form):
         else:
             self.update_workshops(year, req.json())
             api.portal.show_message(_(u'Updated!'), self.request, type=u'info')
-        logger.info('Done.')
-
+        logger.info('Wokshops list updated.')
 
     def update_workshops(self, year, json_data):
         """Update workshops for year
@@ -106,7 +120,6 @@ class UpdateWorkshopsForm(form.Form):
             if item['code'] not in folder:
                 item['start_date'] = datetime.strptime(item['start_date'], '%Y-%m-%d')  # noqa
                 item['end_date'] = datetime.strptime(item['end_date'], '%Y-%m-%d')  # noqa
-                # item['max_participants'] = int(item['max_participants'])
                 item['max_participants'] = int(item.get('max_participants', '0'))
                 workshop = api.content.create(
                     type='Workshop',
@@ -124,8 +137,8 @@ class UpdateWorkshopsForm(form.Form):
                     container=workshop,
                     ctemplate=api.content.get_uuid(obj=template))
 
-
     # @button.buttonAndHandler(_(u'Update Workshops from DB'))
+    @deprecate('Old method is no longer supported, use handle_update_workshops instead.')
     def handle_update_workshops_db(self, action):
         """Update workshops list from CIMAT db
         """
@@ -150,6 +163,7 @@ class UpdateWorkshopsForm(form.Form):
             api.portal.show_message(_(u'Updated!'), self.request, type=u'info')
         logger.info('Done.')
 
+    @deprecate('Old method is no longer supported, used for CIMAT db.')
     def workshop_to_birs(self, data):
         """Returns a workshop with birs api format
         """
