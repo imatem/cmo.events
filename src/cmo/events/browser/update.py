@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from cmo.events import _
+from cmo.events import _tokens
+from cmo.events import _valid_token
 from datetime import date
 from datetime import datetime
 from plone import api
@@ -18,6 +20,7 @@ from zope.deprecation import deprecated
 import logging
 import requests
 import string
+import time
 
 
 try:
@@ -61,41 +64,59 @@ class UpdateWorkshopsForm(form.Form):
         logger.info('Updating Workshops')
         data, errors = self.extractData()
         year = data['year']
-
-        birs_uri = api.portal.get_registry_record('cmo.birs_api_uri')
-        email_autho = api.portal.get_registry_record('cmo.birs_api_user')
-        passwd_autho = api.portal.get_registry_record('cmo.birs_api_password')
-        birs_location = api.portal.get_registry_record('cmo.birs_location')
-
-        if birs_uri is None:
-            api.portal.show_message(_(u'CMO Settings: No BIRS workshops API URL defined!'), self.request, type=u'error')
-            return
-        if email_autho is None:
-            api.portal.show_message(_(u'CMO Settings: No BIRS workshops API user defined!'), self.request, type=u'error')
-            return
-        if passwd_autho is None:
-            api.portal.show_message(_(u'CMO Settings: No BIRS API password defined!'), self.request, type=u'error')
-            return
-        if birs_location is None:
-            api.portal.show_message(_(u'CMO Settings: No BIRS events location defined!'), self.request, type=u'error')
-            return
         if year is None:
             api.portal.show_message(_(u'Select a year to update'), self.request, type=u'error')
             return
+        birs_uri = api.portal.get_registry_record('cmo.birs_api_uri')
+        if birs_uri is None:
+            api.portal.show_message(_(u'CMO Settings: No BIRS workshops API URL defined!'), self.request, type=u'error')
+            return
+        email_autho = api.portal.get_registry_record('cmo.birs_api_user')
+        if email_autho is None:
+            api.portal.show_message(_(u'CMO Settings: No BIRS workshops API user defined!'), self.request, type=u'error')
+            return
 
+        if not _valid_token(email_autho):
+
+            #  TODO: avoid request
+            _tokens = {email_autho: {'token': 'JCBADIGH', 'time': time.time()}}
+            logger.info('we have a token! %s' % _tokens)
+            return
+            #  END TODO:
+
+            passwd_autho = api.portal.get_registry_record('cmo.birs_api_password')
+            if passwd_autho is None:
+                api.portal.show_message(_(u'CMO Settings: No BIRS API password defined!'), self.request, type=u'error')
+                return
+            try:
+                token = requests.post(
+                    birs_uri + '/api/login.json',
+                    headers={
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    json={'api_user': {'email': email_autho, 'password': passwd_autho}},
+                )
+                token.raise_for_status()
+                _tokens = {
+                    email_autho: {'token': token.json()['jwt'], 'time': time.time()},
+                }
+                logger.info('we have a token!')
+            except (ConnectionError, HTTPError) as err:
+                api.portal.show_message(err, self.request, type=u'error')
+
+        #  TODO: avoid request
+        logger.info('Valid Token: %s' % _tokens[email_autho]['token'])
+        return
+        #  END TODO:
+
+        birs_location = api.portal.get_registry_record('cmo.birs_location')
+        if birs_location is None:
+            api.portal.show_message(_(u'CMO Settings: No BIRS events location defined!'), self.request, type=u'error')
+            return
         url = '%s/events/year/%s/location/%s.json' % (birs_uri, year, birs_location)
-
         try:
-            token = requests.post(
-                birs_uri + '/api/login.json',
-                headers={
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                json={'api_user': {'email': email_autho, 'password': passwd_autho}},
-            )
-            token.raise_for_status()
-            jwt = 'Bearer ' + token.json()['jwt']
+            jwt = 'Bearer ' + _tokens[email_autho]['token']
             req = requests.get(
                 url,
                 headers={'Accept': 'application/json', 'Authorization': jwt})
