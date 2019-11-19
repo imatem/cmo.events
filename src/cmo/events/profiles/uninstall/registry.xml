@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<registry>
+    <record name="cmo.birs_token" remove="true" />
+    <record name="cmo.token_time" remove="true" />
+</registry>
