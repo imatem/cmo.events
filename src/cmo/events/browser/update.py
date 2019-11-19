@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from cmo.events import _
-from cmo.events import _tokens
-from cmo.events import _valid_token
+from cmo.events import valid_token
 from datetime import date
 from datetime import datetime
 from plone import api
@@ -71,21 +70,14 @@ class UpdateWorkshopsForm(form.Form):
         if birs_uri is None:
             api.portal.show_message(_(u'CMO Settings: No BIRS workshops API URL defined!'), self.request, type=u'error')
             return
-        email_autho = api.portal.get_registry_record('cmo.birs_api_user')
-        if email_autho is None:
-            api.portal.show_message(_(u'CMO Settings: No BIRS workshops API user defined!'), self.request, type=u'error')
-            return
 
-        if not _valid_token(email_autho):
-
-            #  TODO: avoid request
-            _tokens = {email_autho: {'token': 'JCBADIGH', 'time': time.time()}}
-            logger.info('we have a token! %s' % _tokens)
-            return
-            #  END TODO:
-
-            passwd_autho = api.portal.get_registry_record('cmo.birs_api_password')
-            if passwd_autho is None:
+        if not valid_token():
+            api_user = api.portal.get_registry_record('cmo.birs_api_user')
+            if api_user is None:
+                api.portal.show_message(_(u'CMO Settings: No BIRS workshops API user defined!'), self.request, type=u'error')
+                return
+            api_passwd = api.portal.get_registry_record('cmo.birs_api_password')
+            if api_passwd is None:
                 api.portal.show_message(_(u'CMO Settings: No BIRS API password defined!'), self.request, type=u'error')
                 return
             try:
@@ -95,20 +87,15 @@ class UpdateWorkshopsForm(form.Form):
                         'Accept': 'application/json',
                         'Content-Type': 'application/json',
                     },
-                    json={'api_user': {'email': email_autho, 'password': passwd_autho}},
+                    json={'api_user': {'email': api_user, 'password': api_passwd}},
                 )
                 token.raise_for_status()
-                _tokens = {
-                    email_autho: {'token': token.json()['jwt'], 'time': time.time()},
-                }
-                logger.info('we have a token!')
             except (ConnectionError, HTTPError) as err:
                 api.portal.show_message(err, self.request, type=u'error')
-
-        #  TODO: avoid request
-        logger.info('Valid Token: %s' % _tokens[email_autho]['token'])
-        return
-        #  END TODO:
+            else:
+                api.portal.set_registry_record('cmo.birs_token', token.json()['jwt'])
+                api.portal.set_registry_record('cmo.token_time', time.time())
+                logger.info('We have a valid token!')
 
         birs_location = api.portal.get_registry_record('cmo.birs_location')
         if birs_location is None:
@@ -116,7 +103,7 @@ class UpdateWorkshopsForm(form.Form):
             return
         url = '%s/events/year/%s/location/%s.json' % (birs_uri, year, birs_location)
         try:
-            jwt = 'Bearer ' + _tokens[email_autho]['token']
+            jwt = 'Bearer ' + api.portal.get_registry_record('cmo.birs_token')
             req = requests.get(
                 url,
                 headers={'Accept': 'application/json', 'Authorization': jwt})
@@ -126,7 +113,7 @@ class UpdateWorkshopsForm(form.Form):
         else:
             self.update_workshops(year, req.json())
             api.portal.show_message(_(u'Updated!'), self.request, type=u'info')
-        logger.info('Wokshops list updated.')
+            logger.info('Wokshops list updated.')
 
     def update_workshops(self, year, json_data):
         """Update workshops for year
