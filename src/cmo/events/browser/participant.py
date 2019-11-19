@@ -1,22 +1,25 @@
 # -*- coding: utf-8 -*-
+from cmo.events import valid_token
+from plone import api
 from plone.autoform.view import WidgetsView
 from plone.dexterity.browser.edit import DefaultEditForm
+from plone.dexterity.events import EditFinishedEvent
+from plone.dexterity.i18n import MessageFactory as _
 from plone.dexterity.interfaces import IDexterityFTI
 from plone.dexterity.utils import getAdditionalSchemata
 from plone.registry.interfaces import IRegistry
-from zope.component import getUtility
-# from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from z3c.form import button
 from Products.statusmessages.interfaces import IStatusMessage
+from requests.exceptions import ConnectionError
+from requests.exceptions import HTTPError
+from z3c.form import button
+from zope.component import getUtility
 from zope.event import notify
-from plone.dexterity.events import EditFinishedEvent
-from plone.dexterity.i18n import MessageFactory as _
 
 import logging
 import requests
-from plone import api
-from requests.exceptions import ConnectionError
-from requests.exceptions import HTTPError
+import time
+
+
 logger = logging.getLogger('Plone')
 
 
@@ -48,7 +51,6 @@ class ParticipantEditView(DefaultEditForm):
         )
         self.request.response.redirect(self.nextURL())
 
-        logger.info('Message {0}'.format(self.context.id))
         birs_uri = api.portal.get_registry_record('cmo.birs_api_uri')
         email_autho = api.portal.get_registry_record('cmo.birs_api_user')
         passwd_autho = api.portal.get_registry_record('cmo.birs_api_password')
