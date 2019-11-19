@@ -55,6 +55,28 @@ class ICMOControlPanel(Interface):
         required=True,
     )
 
+    birs_token = schema.TextLine(
+        title=_(
+            u'label_birs_token',
+            default=u'BIRS token'),
+        description=_(
+            u'help_birs_location',
+            default=u'Leave this field empty'),
+        default=None,
+        required=False,
+    )
+
+    token_time = schema.Float(
+        title=_(
+            u'label_birs_token_time',
+            default=u'BIRS token time'),
+        description=_(
+            u'help_birs_location',
+            default=u'Leave this field empty'),
+        default=None,
+        required=False,
+    )
+
 
 class CMOControlPanelForm(RegistryEditForm):
     schema = ICMOControlPanel
