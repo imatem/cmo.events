@@ -295,20 +295,20 @@ class WorkshopView(WidgetsView):
             logger.info('Participants list updated.')
 
     def update_participants(self, json_data):
-
         newparticipants = []
 
         for attendance, participants in json_data.iteritems():
             for participant in participants:
                 userid = idnormalizer.normalize(participant['person']['email'])
                 if userid not in self.context:
-                    kargs = dict(participant['person'])
+                    kargs = participant['person']
 
                     kargs['birs_person_id'] = participant['person']['id']
                     kargs['birs_title'] = participant['person']['title']
                     kargs['person_updated_by'] = participant['person']['updated_by']
                     kargs['person_updated_at'] = participant['person']['updated_at']
                     kargs.update(participant['membership'])
+                    # no field workshop
                     kargs['workshop'] = self.context.id
                     kargs['birs_membership_id'] = participant['membership']['id']
                     kargs['event_notes'] = participant['membership']['staff_notes']
