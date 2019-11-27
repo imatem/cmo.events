@@ -56,7 +56,7 @@ class IPerson(model.Schema):
     )
 
     # id
-    birs_person_id = firstname = schema.TextLine(
+    birs_person_id = schema.TextLine(
         title=_(
             u'label_cmo_birs_person_id',
             default=u'Birs Person Id'
