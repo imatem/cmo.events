@@ -2,6 +2,7 @@
 from cmo.events import _
 from cmo.events import valid_token
 from datetime import datetime
+from dateutil.parser import parse as dateutilparser
 from operator import itemgetter
 from plone import api
 from plone.autoform.view import WidgetsView
@@ -296,7 +297,6 @@ class WorkshopView(WidgetsView):
 
     def update_participants(self, json_data):
         newparticipants = []
-
         for attendance, participants in json_data.iteritems():
             for participant in participants:
                 userid = idnormalizer.normalize(participant['person']['email'])
@@ -316,14 +316,12 @@ class WorkshopView(WidgetsView):
                     kargs['membership_updated_at'] = participant['membership']['updated_at']
                     kargs['off_site'] = participant['membership']['own_accommodation']
 
-                    for d in ['arrival_date', 'replied_at', 'departure_date', 'person_updated_by', 'person_updated_at', 'membership_updated_by', 'membership_updated_at']:
-                        if kargs[d] is not None and kargs[d] != '0000-00-00 00:00:00':
+                    for d in ['person_updated_at', 'membership_updated_at', 'replied_at', 'arrival_date', 'departure_date']:
+                        if kargs[d] is not None:
                             try:
-                                kargs[d] = datetime.strptime(kargs[d], '%Y-%m-%d %H:%M:%S')  # noqa
+                                kargs[d] = dateutilparser(kargs[d])
                             except Exception:
                                 del kargs[d]
-                        else:
-                            del kargs[d]
 
                     # we define own title
                     del kargs['title']
@@ -347,7 +345,11 @@ class WorkshopView(WidgetsView):
                     obj.phd_year = participant['person']['phd_year']
                     obj.academic_status = participant['person']['academic_status']
                     obj.attendance = participant['membership']['attendance']
-                    # obj.replied_at = participant['membership']['replied_at']
+                    if participant['membership']['replied_at'] is not None:
+                        try:
+                            obj.replied_at = dateutilparser(participant['membership']['replied_at'])
+                        except Exception:
+                            pass
                     obj.special_info = participant['membership']['special_info']
                     obj.event_notes = participant['membership']['staff_notes']
                     obj.reindexObject()
