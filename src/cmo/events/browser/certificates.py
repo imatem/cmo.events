@@ -209,7 +209,7 @@ class CertificatesView(BrowserView):
         fields_certificate['subheader'] = certificate.subheader
         fields_certificate['preamble'] = certificate.preamble
         fields_certificate['participantdata'] = certificate.participantdata
-        fields_certificate['bodydescription'] = certificate.bodydescription
+        fields_certificate['bodydescription'] = certificate.bodydescription  # default value
         fields_certificate['signaturename'] = certificate.signaturename
         fields_certificate['signatureappointment'] = certificate.signatureappointment
         fields_certificate['signatureinst'] = certificate.signatureinst
@@ -223,6 +223,11 @@ class CertificatesView(BrowserView):
             if brain:
                 obj = brain[0].getObject()
                 lparticipant = []
+                if 'virtual' in obj.role.lower():
+                    fields_certificate['bodydescription'] = certificate.onlinebodydescription
+                else:
+                    fields_certificate['bodydescription'] = certificate.bodydescription
+
                 for cvalue in fields_certificate.values():
                     lparticipant.append(self.parseValue(obj, cvalue))
 
