@@ -174,7 +174,7 @@ class ICertificate(Interface):
     onlinebodydescription = schema.Text(
         title=_(u'label_cmo_certificate_onlinedescription', u'On Line Body Description'),
         required=False,
-        default=u'has attended the "$Workshop:title" workshop, held via Zoom from $fancyDate.'
+        default=u'has attended the "$Workshop:title" online workshop, held via Zoom from $fancyDate.'
     )
 
     signaturename = schema.Text(
