@@ -263,7 +263,7 @@ class WorkshopView(WidgetsView):
                 for d in ['arrival_date', 'replied_at', 'departure_date']:
                     if kargs[d] is not None and kargs[d] != '0000-00-00 00:00:00':
                         try:
-                            kargs[d] = datetime.strptime(kargs[d], '%Y-%m-%d %H:%M:%S')  # noqa
+                            datetime.strptime(kargs[d], '%Y-%m-%d %H:%M:%S')  # noqa
                         except Exception:
                             del kargs[d]
                     else:
@@ -287,9 +287,29 @@ class WorkshopView(WidgetsView):
                 participant.phd_year = item['Person']['phd_year']
                 participant.academic_status = item['Person']['academic_status']
                 participant.attendance = item['Membership']['attendance']
+                participant.role = item['Membership']['role']
                 participant.replied_at = item['Membership']['replied_at']
+                participant.has_guest = item['Membership']['has_guest']
                 participant.special_info = item['Membership']['special_info']
                 participant.event_notes = item['Membership']['event_notes']
+                try:
+                    datetime.strptime(item['Membership']['arrival_date'], '%Y-%m-%d %H:%M:%S')
+                    arrival_date = item['Membership']['arrival_date']
+                except ValueError:
+                    arrival_date = None
+
+                if participant.arrival_date != arrival_date:
+                    participant.arrival_date = arrival_date
+
+                try:
+                    datetime.strptime(item['Membership']['departure_date'], '%Y-%m-%d %H:%M:%S')
+                    departure_date = item['Membership']['departure_date']
+                except ValueError:
+                    departure_date = None
+
+                if participant.departure_date != departure_date:
+                    participant.departure_date = departure_date
+
                 participant.reindexObject()
         if newparticipants:
             msg = _(u'New participants: ') + ', '.join(newparticipants)
