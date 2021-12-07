@@ -283,7 +283,17 @@ class WorkshopView(WidgetsView):
                 participant.lastname = item['Person']['lastname']
                 participant.firstname = item['Person']['firstname']
                 participant.country = item['Person']['country']
+                participant.gender = item['Person']['gender']
+
+                # if not participant.country and item['Person']['country']:
+                #     participant.country = item['Person']['country']
+                # if not participant.gender and item['Person']['gender']:
+                #     participant.gender = item['Person']['gender']
+
                 participant.affiliation = item['Person']['affiliation']
+                participant.salutation = item['Person']['salutation']
+                participant.url = item['Person']['url']
+                participant.phone = item['Person']['phone']
                 participant.phd_year = item['Person']['phd_year']
                 participant.academic_status = item['Person']['academic_status']
                 participant.attendance = item['Membership']['attendance']
