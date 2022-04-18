@@ -305,7 +305,7 @@ class WorkshopView(WidgetsView):
                 try:
                     datetime.strptime(item['Membership']['arrival_date'], '%Y-%m-%d %H:%M:%S')
                     arrival_date = item['Membership']['arrival_date']
-                except ValueError:
+                except Exception:
                     arrival_date = None
 
                 if participant.arrival_date != arrival_date:
@@ -314,7 +314,7 @@ class WorkshopView(WidgetsView):
                 try:
                     datetime.strptime(item['Membership']['departure_date'], '%Y-%m-%d %H:%M:%S')
                     departure_date = item['Membership']['departure_date']
-                except ValueError:
+                except Exception:
                     departure_date = None
 
                 if participant.departure_date != departure_date:
