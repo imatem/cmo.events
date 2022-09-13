@@ -33,7 +33,7 @@ class IAcommodation(model.Schema):
             u'label_cmo_hotel',
             default=u'Hotel'
         ),
-        values=[u'Los Laureles', u'Angel Inn', u'Sin Hotel'],
+        values=[u'Los Laureles', u'Angel Inn', u'Sin Hotel', 'Suites Xadani'],
         required=False,
     )
 
