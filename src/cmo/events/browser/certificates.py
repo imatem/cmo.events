@@ -592,8 +592,8 @@ class CertificatesView(BrowserView):
                 mail_text += u'.\n\n\n\n'
                 mail_text += u' Best regards, \n'
                 mail_text += u'Claudia Arias Cao Romero \n'
-                mail_text += u'Conference Program Coordinator \n'
                 mail_text += u'Casa Matemática Oaxaca \n'
+                mail_text += u'Manager \n'
 
                 pdffile = open(pdfdata[0], "rb")
                 pdf = MIMEApplication(pdffile.read(), _subtype='pdf')
