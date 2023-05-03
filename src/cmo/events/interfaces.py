@@ -180,13 +180,13 @@ class ICertificate(Interface):
     signaturename = schema.Text(
         title=_(u'label_cmo_certificate_signaturename', u'Signature Name'),
         required=False,
-        default=u'Dra. Hortensia Galeana Sánchez'
+        default=u'Dr. Hortensia Galeana Sánchez'
     )
 
     signatureappointment = schema.Text(
         title=_(u'label_cmo_certificate_appointment', u'Signature Appointment'),
         required=False,
-        default=u'Directora'
+        default=u'Director'
     )
 
     signatureinst = schema.Text(
