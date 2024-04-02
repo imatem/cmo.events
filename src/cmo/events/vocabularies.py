@@ -22,3 +22,14 @@ def CertificatesTemplates(context):
         templates.append(SimpleVocabulary.createTerm(
             template.UID(), template.id, template.title))
     return SimpleVocabulary(templates)
+
+
+@provider(IVocabularyFactory)
+def hotels(context):
+    values=[u'Los Laureles', u'Angel Inn', u'Suites Xadani', u'Sin Hotel', 'Self-funded']
+    try:
+        if context.hotel != u'Suites Xadani':
+            values.remove(u'Suites Xadani')
+    except:
+        pass
+    return SimpleVocabulary.fromItems([[i, i] for i in values])

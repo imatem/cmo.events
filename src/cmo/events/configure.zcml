@@ -42,6 +42,11 @@
       name="cmo.events.certificatestemplates"
       />
 
+  <utility
+      component=".vocabularies.hotels"
+      name="cmo.events.vocabularies.hotels"
+      />
+
   <adapter name="workshop_start" factory=".indexers.workshop_start" />
   <adapter name="workshop_end" factory=".indexers.workshop_end" />
 
