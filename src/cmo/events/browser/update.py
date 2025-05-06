@@ -12,6 +12,9 @@ from z3c.form import button
 from z3c.form import field
 from z3c.form import form
 from zope import schema
+from zope.interface import directlyProvides
+from zope.schema.interfaces import IContextSourceBinder
+from zope.schema.vocabulary import SimpleVocabulary
 
 # from zope.component import getMultiAdapter
 import logging
@@ -34,12 +37,18 @@ config = {
 }
 
 
+def DynamicYearsVocabulary(context):
+    v = range(date.today().year, date.today().year+2)
+    v = [str(i) for i in v]
+    return SimpleVocabulary.fromValues(v)
+directlyProvides(DynamicYearsVocabulary, IContextSourceBinder)
+
 class IMyForm(model.Schema):
 
     year = schema.Choice(
         title=_(u'Year'),
-        # values=[u'2015', u'2016', u'2017', u'2018', u'2019', u'2020', u'2021', u'2022', u'2023'],
-        values=[u'2024', u'2025'],
+        # values=[u'2024', u'2025'],
+        source=DynamicYearsVocabulary,
         required=False,
     )
 
