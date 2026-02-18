@@ -278,9 +278,14 @@ class WorkshopView(WidgetsView):
                 newparticipants.append(' '.join([kargs['firstname'], kargs['lastname']]))
             else:
                 participant = self.context[userid]
+
+                lastname = ''
+                if item['Person']['lastname']:
+                    lastname = item['Person']['lastname']
+
                 participant.title = ' '.join(
-                    [item['Person']['firstname'], item['Person']['lastname']])
-                participant.lastname = item['Person']['lastname']
+                    [item['Person']['firstname'], lastname])
+                participant.lastname = lastname
                 participant.firstname = item['Person']['firstname']
                 participant.country = item['Person']['country']
                 participant.gender = item['Person']['gender']
