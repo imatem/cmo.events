@@ -286,7 +286,7 @@ class WorkshopView(WidgetsView):
                 if item['Person']['lastname']:
                     lastname = item['Person']['lastname']
 
-                participant.title = ' '.join([firstname, lastname])
+                participant.title = ' '.join(filter(None, [firstname, lastname]))
                 participant.lastname = lastname
                 participant.firstname = firstname
                 participant.country = item['Person']['country']
