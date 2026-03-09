@@ -269,13 +269,14 @@ class WorkshopView(WidgetsView):
                     else:
                         del kargs[d]
 
+                title = ' '.join(filter(None, [kargs['firstname'], kargs['lastname']]))
                 api.content.create(
                     type='Participant',
                     id=idnormalizer.normalize(kargs['email']),
-                    title=' '.join([kargs['firstname'], kargs['lastname']]),
+                    title=title,
                     container=self.context,
                     **kargs)
-                newparticipants.append(' '.join([kargs['firstname'], kargs['lastname']]))
+                newparticipants.append(title)
             else:
                 participant = self.context[userid]
                 lastname = participant.lastname
