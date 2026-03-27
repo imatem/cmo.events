@@ -26,10 +26,14 @@ def CertificatesTemplates(context):
 
 @provider(IVocabularyFactory)
 def hotels(context):
-    values=[u'Los Laureles', u'Angel Inn', u'Suites Xadani', u'Sin Hotel', 'Self-funded']
+    values=[u'Hotel Oaxaca Real', u'Los Laureles', u'Angel Inn', u'Suites Xadani', u'Sin Hotel', 'Self-funded']
     try:
         if context.hotel != u'Suites Xadani':
             values.remove(u'Suites Xadani')
+        if context.hotel != u'Los Laureles':
+            values.remove(u'Los Laureles')
+        if context.hotel != u'Angel Inn':
+            values.remove(u'Angel Inn')
     except:
         pass
     return SimpleVocabulary.fromItems([[i, i] for i in values])
